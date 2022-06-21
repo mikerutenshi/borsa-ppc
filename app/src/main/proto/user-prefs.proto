@@ -1,0 +1,86 @@
+syntax = "proto3";
+option java_package = "com.android.borsappc";
+option java_multiple_files = true;
+
+message SignInPrefs {
+    string access_token = 1;
+    string refresh_token = 2;
+    string role = 3;
+    string name = 4;
+    string username = 5;
+}
+
+//enum Position {
+//    drawer = 0;
+//    sewer = 1;
+//    assembler = 2;
+//    sole_stitcher = 3;
+//    lining_drawer = 4;
+//    insole_stitcher = 5;
+//}
+//
+//enum SortBy {
+//    name = 0;
+//    position = 1;
+//    spk_no = 2;
+//    article_no = 3;
+//    created_at = 4;
+//    assigned_at = 5;
+//    done_at = 6;
+//}
+
+//enum SortDirection {
+//    asc = 0;
+//    desc = 1;
+//}
+
+message Date {
+    string start_date = 1;
+    string end_date = 2;
+}
+
+message Sort {
+    string sort_by = 1;
+    string  sort_direction = 2;
+}
+
+message WorkerFilterPrefs {
+    repeated string  position = 1;
+    Sort sort = 2;
+}
+
+message WorkFilterPrefs {
+    Date date = 1;
+    Sort sort = 2;
+}
+
+message WorkAssignedFilterPrefs {
+    string filter_by = 1;
+    Date date = 2;
+    Sort sort = 3;
+}
+message WorkDoneFilterPrefs {
+    string filter_by = 1;
+    Date date = 2;
+    Sort sort = 3;
+}
+
+message AssignWorkFilterPrefs {
+    Date date = 1;
+    Sort sort = 2;
+}
+
+message DoWorkFilterPrefs {
+    Date date = 1;
+    Sort sort = 2;
+}
+
+message UserPreferences {
+    SignInPrefs sign_in_prefs = 1;
+    WorkFilterPrefs work_filter_prefs = 2;
+    WorkerFilterPrefs worker_filter_prefs = 3;
+    WorkAssignedFilterPrefs work_assigned_filter_prefs = 4;
+    WorkDoneFilterPrefs work_done_filter_prefs = 5;
+    AssignWorkFilterPrefs assign_work_filter_prefs = 6;
+    DoWorkFilterPrefs do_work_filter_prefs = 7;
+}
