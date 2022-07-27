@@ -4,8 +4,9 @@ import androidx.datastore.core.DataStore
 import com.android.borsappc.BuildConfig
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.net.ErrorInterceptor
-import com.android.borsappc.data.net.TokenAuthenticator
+import com.android.borsappc.data.net.RefreshTokenAuthenticator
 import com.android.borsappc.data.net.TokenInterceptor
+import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -24,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object NetModule {
     @RetrofitWithAuth
     @Provides
-    fun apiRetrofit(httpClient: OkHttpClient, gson: Gson): Retrofit {
+    fun retrofitWithAuth(httpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -36,11 +37,11 @@ object NetModule {
     fun httpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         tokenInterceptor: TokenInterceptor,
-        tokenAuthenticator: TokenAuthenticator,
+        refreshTokenAuthenticator: RefreshTokenAuthenticator,
         errorInterceptor: ErrorInterceptor
     ): OkHttpClient {
         val httpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
-        httpClientBuilder.authenticator(tokenAuthenticator)
+        httpClientBuilder.authenticator(refreshTokenAuthenticator)
         httpClientBuilder.addInterceptor(errorInterceptor)
         httpClientBuilder.addInterceptor(tokenInterceptor)
         if (BuildConfig.DEBUG) {
@@ -69,8 +70,8 @@ object NetModule {
 
     @RetrofitWithoutAuth
     @Provides
-    fun tokenRetrofit(errorInterceptor: ErrorInterceptor): Retrofit {
-        //retrofit exclusively for token refresh
+    fun retrofitWithoutAuth(errorInterceptor: ErrorInterceptor): Retrofit {
+        //retrofit exclusively for auth services
         val httpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         httpClientBuilder.addInterceptor(errorInterceptor)
 
@@ -90,17 +91,17 @@ object NetModule {
 
     @Provides
     fun errorInterceptor(
-        @RetrofitWithoutAuth retrofit: Lazy<Retrofit>,
+        authRemoteDataSource: Lazy<AuthRemoteDataSource>,
         userPreferences: DataStore<UserPreferences>
     ): ErrorInterceptor {
-        return ErrorInterceptor(userPreferences, retrofit)
+        return ErrorInterceptor(userPreferences, authRemoteDataSource)
     }
 
     @Provides
-    fun tokenAuthenticator(
-        @RetrofitWithoutAuth retrofit: Lazy<Retrofit>,
+    fun refreshTokenAuthenticator(
+        authRemoteDataSource: AuthRemoteDataSource,
         userPreferences: DataStore<UserPreferences>
-    ): TokenAuthenticator {
-        return TokenAuthenticator(retrofit, userPreferences)
+    ): RefreshTokenAuthenticator {
+        return RefreshTokenAuthenticator(authRemoteDataSource, userPreferences)
     }
 }

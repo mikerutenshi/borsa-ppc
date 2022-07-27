@@ -13,15 +13,14 @@ import java.io.IOException
 class TokenInterceptor(private val userPreferences: DataStore<UserPreferences>) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Chain): Response {
-        var request: Request? = null
-        request = if (chain.request().url.encodedPath.contains("/users")
-            && chain.request().method == "POST"
-        ) {
-            chain.request()
-        } else {
-            val accessToken = runBlocking {
-                userPreferences.data.last().signInPrefs.accessToken
-            }
+        val accessToken = runBlocking {
+            userPreferences.data.last().signInPrefs.accessToken
+        }
+        val request: Request = // if (chain.request().url.encodedPath.contains("/users")
+//            && chain.request().method == "POST"
+//        ) {
+//            chain.request()
+//        } else {
             chain.request().newBuilder()
                 .addHeader(
                     "Authorization",
@@ -29,7 +28,7 @@ class TokenInterceptor(private val userPreferences: DataStore<UserPreferences>) 
                 )
                 .url(chain.request().url)
                 .build()
-        }
+//        }
         return chain.proceed(request)
     }
 }

@@ -3,6 +3,8 @@ package com.android.borsappc.data.net
 import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.Username
+import com.android.borsappc.data.net.datasource.AuthDataSource
+import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
 import com.android.borsappc.data.net.response.GenericResponse
 import com.android.borsappc.data.net.service.AuthService
 import com.google.gson.JsonElement
@@ -22,7 +24,7 @@ import java.util.*
 
 class ErrorInterceptor(
     private val userPreferences: DataStore<UserPreferences>,
-    private val retrofit: Lazy<Retrofit>
+    private val authDataSource: Lazy<AuthRemoteDataSource>
 ) : Interceptor {
 
     @Throws(IOException::class)
@@ -43,9 +45,9 @@ class ErrorInterceptor(
                         try {
                             val jsonObject: JsonObject = jsonElement.asJsonObject
                             if (jsonObject.has("message")) {
-                                if (jsonObject.get("message").getAsString()
+                                if (jsonObject.get("message").asString
                                         .lowercase(Locale.getDefault())
-                                        .contains("refresh token is expired")
+                                        .contains("refresh token")
                                 ) {
                                     signOut()
                                 }
@@ -74,11 +76,10 @@ class ErrorInterceptor(
             runBlocking {
                 val username = userPreferences.data.last().signInPrefs.username
                 val userNameModel = Username(username)
-                val signOutResponse: GenericResponse<Unit>? =
-                    retrofit.get().create(AuthService::class.java).signOut(userNameModel)
+                val signOutResponse: GenericResponse<Unit> =
+                    authDataSource.get().signOut(username)
 
-                if (signOutResponse != null &&
-                    signOutResponse.status.lowercase(Locale.ROOT) == "ok") {
+                if (signOutResponse.status.lowercase(Locale.ROOT) == "ok") {
                     // TODO navigate to auth screen
                     userPreferences.updateData { it.toBuilder().clear().build() }
                 } else {

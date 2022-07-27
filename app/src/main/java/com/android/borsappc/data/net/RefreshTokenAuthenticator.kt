@@ -4,8 +4,7 @@ import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.UserAccessToken
 import com.android.borsappc.data.model.UserRefreshToken
-import com.android.borsappc.data.net.response.GenericResponse
-import com.android.borsappc.data.net.service.AuthService
+import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -21,8 +20,8 @@ import retrofit2.Retrofit
 import timber.log.Timber
 import java.io.IOException
 
-class TokenAuthenticator(
-    private val retrofit: Lazy<Retrofit>,
+class RefreshTokenAuthenticator(
+    private val authRemoteDataSource: AuthRemoteDataSource,
     private val userPreferences: DataStore<UserPreferences>
 ) : Authenticator {
     private var retryCounter = 0
@@ -53,32 +52,29 @@ class TokenAuthenticator(
             } catch (ex: JsonSyntaxException) {
                 throw IOException("Json syntax exception when parsing")
             }
-        }
 
-        synchronized(this) {
-            retryCounter++
+            synchronized(this) {
+                retryCounter++
 
-            val refreshToken = runBlocking {
-                userPreferences.data.last().signInPrefs.refreshToken
-            }
-            Timber.d("mRefreshToken: %s", refreshToken)
-            val username = runBlocking {
-                userPreferences.data.last().signInPrefs.username
-            }
-            val refreshTokenModel = UserRefreshToken(username, refreshToken)
-            val refreshedResponse: GenericResponse<UserAccessToken>? =
-                retrofit.get().create(
-                    AuthService::class.java
-                ).refreshToken(refreshTokenModel)
+                val refreshToken = runBlocking {
+                    userPreferences.data.last().signInPrefs.refreshToken
+                }
+                Timber.d("mRefreshToken: %s", refreshToken)
+                val username = runBlocking {
+                    userPreferences.data.last().signInPrefs.username
+                }
+                val refreshTokenModel = UserRefreshToken(username, refreshToken)
+                val userAccessToken: UserAccessToken =
+                    authRemoteDataSource.refreshToken(refreshTokenModel).data
 
-            if (refreshedResponse != null) {
-                val newAccessToken = "Bearer " + refreshedResponse.data.accessToken
+                val newAccessToken = "Bearer " + userAccessToken.accessToken
 
                 runBlocking {
                     userPreferences.updateData { currentPrefs ->
                         currentPrefs.toBuilder()
                             .setSignInPrefs(
-                                currentPrefs.signInPrefs.toBuilder().setAccessToken(newAccessToken).build()
+                                currentPrefs.signInPrefs.toBuilder().setAccessToken(newAccessToken)
+                                    .build()
                             ).build()
                     }
                 }
@@ -88,6 +84,7 @@ class TokenAuthenticator(
                     .build()
             }
         }
+
         return null
     }
 }

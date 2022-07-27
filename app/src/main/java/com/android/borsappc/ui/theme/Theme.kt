@@ -16,6 +16,21 @@ private val DarkColorPalette = darkColors(
     onPrimary = Chartreuse
 )
 
+private val DraculaColorPalette = darkColors(
+    primary = Pink,
+    primaryVariant = Purple,
+    secondary = Green,
+    secondaryVariant = Orange,
+    background = Black,
+    surface = Black,
+    error = Red,
+    onPrimary = White,
+    onSecondary = White,
+    onError = White,
+    onSurface = White,
+    onBackground = White
+)
+
 private val LightColorPalette = lightColors()
 
 @Composable
@@ -24,7 +39,7 @@ fun BorsaPPCTheme(
     content: @Composable () -> Unit
 ) {
     var colors = if (darkTheme) {
-        DarkColorPalette
+        DraculaColorPalette
     } else {
         LightColorPalette
     }

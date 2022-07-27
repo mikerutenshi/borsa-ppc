@@ -14,8 +14,8 @@ interface AuthService {
     suspend fun register(@Body userModel: User): GenericResponse<Unit>
 
     @POST("v1/users/token")
-    fun refreshToken(@Body refreshTokenModel: UserRefreshToken): GenericResponse<UserAccessToken>?
+    fun refreshToken(@Body refreshTokenModel: UserRefreshToken): GenericResponse<UserAccessToken>
 
     @POST("v1/users/signout")
-    suspend fun signOut(@Body userNameModel: Username): GenericResponse<Unit>?
+    suspend fun signOut(@Body userNameModel: Username): GenericResponse<Unit>
 }

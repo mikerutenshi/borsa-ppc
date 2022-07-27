@@ -3,6 +3,7 @@ package com.android.borsappc
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -28,20 +29,28 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.ui.BorsaPPCTheme
+import com.android.borsappc.ui.auth.AuthScreen
+import com.android.borsappc.ui.auth.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val authViewModel: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BorsaPPCTheme {
 //                MyApp()
 //                SearchBar()
-                Surface(modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    MyApp()
-                }
+//                Surface(modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colors.background
+//                ) {
+                    AuthScreen(viewModel = authViewModel)
+//                }
             }
         }
     }
@@ -138,20 +147,20 @@ fun OnBoardingScreen(onContinueClicked: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true, name = "Text Preview", uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreview() {
-    BorsaPPCTheme() {
-        androidx.compose.material.Surface(color = MaterialTheme.colors.background) {
-            Greetings(names = listOf("Michael", "Jane"))
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnBoardingPreview() {
-    BorsaPPCTheme {
-        OnBoardingScreen(onContinueClicked = {})
-    }
-}
+//@Preview(showBackground = true, name = "Text Preview", uiMode = UI_MODE_NIGHT_YES)
+//@Composable
+//fun DefaultPreview() {
+//    BorsaPPCTheme() {
+//        androidx.compose.material.Surface(color = MaterialTheme.colors.background) {
+//            Greetings(names = listOf("Michael", "Jane"))
+//        }
+//    }
+//}
+//
+//@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+//@Composable
+//fun OnBoardingPreview() {
+//    BorsaPPCTheme {
+//        OnBoardingScreen(onContinueClicked = {})
+//    }
+//}

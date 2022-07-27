@@ -3,6 +3,16 @@
     <string name="show_less">Show Less</string>
     <string name="show_more">Show More</string>
     <string name="lorem_ipsum_dolor">\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus est quis ante sodales, ornare viverra ligula scelerisque. Sed interdum, leo ut elementum fringilla, odio eros scelerisque enim, at fermentum neque orci et mauris. Aliquam ullamcorper eros dui, ut suscipit quam feugiat quis. Suspendisse sodales dignissim sem efficitur venenatis. Aenean eleifend tellus eu lacus congue, nec scelerisque quam viverra. Aliquam vel venenatis tellus. Sed id massa ligula. Nullam ac viverra nulla, id fringilla massa. Nunc a blandit lectus. Nulla pulvinar, magna ultrices condimentum malesuada, massa velit bibendum mauris, in mollis dolor ex et magna. Donec vel dui est. \"</string>
-    <string name="placeholder_search">Search</string>
+
+    <string name="placeholder_search">Cari</string>
+    <string name="placeholder_username">Nama Pengguna</string>
+    <string name="placeholder_password">Password</string>
+    <string name="error_username_too_short">Nama pengguna terlalu pendek</string>
+    <string name="error_password_too_short">Password terlalu pendek</string>
+    <string name="error_password_regex">Password harus terdiri dari paling tidak 1 huruf besar, 1 angka dan 1 simbol</string>
+    <string name="validation_success">Data sudah benar</string>
+    <string name="validation_fail">Data belum benar</string>
+    <string name="signin_continue">Lanjutkan</string>
+
     <string name="inversion">Inversion</string>
 </resources>
