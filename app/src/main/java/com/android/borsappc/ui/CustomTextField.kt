@@ -52,7 +52,14 @@ fun CustomTextField(
         )
         if (inputWrapper.errorId != null) {
             Text(
-                text = stringResource(inputWrapper.errorId),
+                text = stringResource(id = inputWrapper.errorId),
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        } else if (inputWrapper.errorMessage != null) {
+            Text(
+                text = inputWrapper.errorMessage,
                 color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 16.dp)

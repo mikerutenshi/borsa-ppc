@@ -70,13 +70,13 @@ object NetModule {
 
     @RetrofitWithoutAuth
     @Provides
-    fun retrofitWithoutAuth(errorInterceptor: ErrorInterceptor): Retrofit {
+    fun retrofitWithoutAuth(loggingInterceptor: HttpLoggingInterceptor,
+        errorInterceptor: ErrorInterceptor): Retrofit {
         //retrofit exclusively for auth services
         val httpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         httpClientBuilder.addInterceptor(errorInterceptor)
 
         if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor()
             if (!httpClientBuilder.interceptors()
                     .contains(loggingInterceptor)
             ) httpClientBuilder.addInterceptor(loggingInterceptor)

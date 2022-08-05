@@ -13,6 +13,7 @@
     <string name="validation_success">Data sudah benar</string>
     <string name="validation_fail">Data belum benar</string>
     <string name="signin_continue">Lanjutkan</string>
+    <string name="user_logged_in">%s is logged in</string>
 
     <string name="inversion">Inversion</string>
 </resources>

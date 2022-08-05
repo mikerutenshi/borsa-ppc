@@ -4,7 +4,7 @@ import androidx.compose.ui.focus.FocusDirection
 import com.android.borsappc.ui.auth.FocusedTextFieldKey
 
 sealed class ScreenEvent {
-    class ShowToast(val messageId: Int) : ScreenEvent()
+    class ShowToast(val messageId: Int, val param: String?) : ScreenEvent()
     class UpdateKeyboard(val show: Boolean) : ScreenEvent()
     class MoveFocus(val direction: FocusDirection = FocusDirection.Down) : ScreenEvent()
     class RequestFocus(val textFieldKey: FocusedTextFieldKey) : ScreenEvent()

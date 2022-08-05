@@ -5,7 +5,7 @@ import com.android.borsappc.ui.InputWrapper
 
 data class AuthUiState(
     var user: User? = null,
-    val messages: List<Message> = listOf(),
+    val messages: MutableList<Message> = mutableListOf(),
     var isFetchingUser: Boolean = false,
 //    val username: InputWrapper = InputWrapper(),
 //    val password: InputWrapper = InputWrapper(),
@@ -21,7 +21,8 @@ const val USERNAME = "username"
 const val PASSWORD = "password"
 const val IS_PASSWORD_VISIBLE = "isPasswordVisible"
 const val FOCUSED_TEXt_FIELD = "focusedTextField"
-data class Message(val id: Long, val message: String)
+data class Message(val id: Int
+?, val message: String)
 enum class FocusedTextFieldKey {
     USERNAME, PASSWORD, NONE
 }

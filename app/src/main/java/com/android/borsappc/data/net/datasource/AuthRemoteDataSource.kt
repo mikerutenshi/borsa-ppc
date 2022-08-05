@@ -5,6 +5,7 @@ import com.android.borsappc.data.net.response.GenericResponse
 import com.android.borsappc.data.net.service.AuthService
 import com.android.borsappc.di.RetrofitWithoutAuth
 import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthRemoteDataSource @Inject constructor(

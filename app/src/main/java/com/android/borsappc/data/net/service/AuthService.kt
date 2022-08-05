@@ -2,7 +2,6 @@ package com.android.borsappc.data.net.service
 
 import com.android.borsappc.data.model.*
 import com.android.borsappc.data.net.response.GenericResponse
-import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.POST
 

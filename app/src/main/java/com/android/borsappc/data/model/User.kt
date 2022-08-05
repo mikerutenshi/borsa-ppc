@@ -6,7 +6,7 @@ data class User(
     @SerializedName("id")
     private val id: Int,
     @SerializedName("username")
-    private val username: String,
+    val username: String,
     @SerializedName("password")
     private val password: String,
     @SerializedName("first_name")
