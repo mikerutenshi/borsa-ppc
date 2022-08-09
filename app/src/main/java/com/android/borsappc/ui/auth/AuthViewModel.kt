@@ -6,10 +6,8 @@ import androidx.lifecycle.*
 import com.android.borsappc.R
 import com.android.borsappc.data.model.UserSignIn
 import com.android.borsappc.data.repository.AuthRepository
-import com.android.borsappc.ui.InputValidator
-import com.android.borsappc.ui.InputWrapper
-import com.android.borsappc.ui.ScreenEvent
-import com.android.borsappc.ui.UserInputEvent
+import com.android.borsappc.ui.*
+import com.android.borsappc.ui.main.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -25,7 +23,8 @@ class InputErrors(
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val handle: SavedStateHandle
+    private val handle: SavedStateHandle,
+    private val mainViewModel: MainViewModel
 ) : ViewModel() {
 
     val username = handle.getStateFlow(USERNAME, InputWrapper())
@@ -161,13 +160,9 @@ class AuthViewModel @Inject constructor(
 //                                            handle[PASSWORD] = password.value.copy(errorMessage = error)
 //                                        }
 //                                        else -> {
-                                            _uiState.update { state ->
-                                                state.messages.add(Message(null, error))
-                                                state.copy(messages = state.messages)
-                                            }
-                                            Timber.d("Error Message ${_uiState.value.messages[0]}")
 //                                        }
 //                                    }
+                                    mainViewModel.setErrorMessage(error)
                                 }
 //                                _events.emit(ScreenEvent.ShowToast(
 //                                    R.string.user_logged_in, it.localizedMessage))
@@ -186,12 +181,6 @@ class AuthViewModel @Inject constructor(
             _events.emit(ScreenEvent.RequestFocus(focusedTextField))
             _events.emit(ScreenEvent.UpdateKeyboard(true))
         }
-    }
-
-    fun clearUserMessage(message: Message) {
-        val messages = _uiState.value.messages
-        messages.remove(message)
-        _uiState.update { it.copy(messages = messages) }
     }
 
     @OptIn(FlowPreview::class)

@@ -1,6 +1,12 @@
-package com.android.borsappc.util
+package com.android.borsappc
 
+import android.content.Context
+import android.widget.Toast
 import kotlinx.coroutines.CancellationException
+
+fun Context.toast(messageId: Int, param: String?) {
+    Toast.makeText(this, getString(messageId, param), Toast.LENGTH_SHORT).show()
+}
 
 /**
  * Like [runCatching], but with proper coroutines cancellation handling. Also only catches [Exception] instead of [Throwable].

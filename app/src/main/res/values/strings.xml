@@ -16,4 +16,6 @@
     <string name="user_logged_in">%s is logged in</string>
 
     <string name="inversion">Inversion</string>
+
+    <string name="ic_desc_plus">Tombol tambah</string>
 </resources>

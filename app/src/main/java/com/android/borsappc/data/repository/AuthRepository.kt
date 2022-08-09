@@ -4,7 +4,7 @@ import com.android.borsappc.data.model.User
 import com.android.borsappc.data.model.UserSignIn
 import com.android.borsappc.data.net.datasource.AuthDataSource
 import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
-import com.android.borsappc.util.resultOf
+import com.android.borsappc.resultOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
