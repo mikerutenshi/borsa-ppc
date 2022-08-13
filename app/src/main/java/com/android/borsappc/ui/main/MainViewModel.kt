@@ -19,4 +19,8 @@ class MainViewModel @Inject constructor() : ViewModel() {
         _uiState.update { it.copy(errorMessage = error) }
         Timber.d("setErrorMessage: ${_uiState.value}")
     }
+
+    fun changeScaffoldContent(screenRoute: String) {
+        _uiState.update { it.copy(currentScreen = screenRoute)}
+    }
 }

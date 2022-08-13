@@ -1,17 +1,15 @@
 package com.android.borsappc.ui.auth
 
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.toLowerCase
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.*
-import com.android.borsappc.R
+import com.android.borsappc.SignInPrefs
+import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.UserSignIn
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.ui.*
-import com.android.borsappc.ui.main.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,9 +22,8 @@ class InputErrors(
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val handle: SavedStateHandle,
-    private val mainViewModel: MainViewModel
+    private val userPreferences: DataStore<UserPreferences>
 ) : ViewModel() {
-
     val username = handle.getStateFlow(USERNAME, InputWrapper())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), InputWrapper())
     val password = handle.getStateFlow(PASSWORD, InputWrapper())
@@ -45,11 +42,11 @@ class AuthViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000L), AuthUiState())
+        viewModelScope, SharingStarted.WhileSubscribed(5_000), AuthUiState())
 
     private val _events = MutableSharedFlow<ScreenEvent>()
     val events = _events.asSharedFlow().shareIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000L))
+        viewModelScope, SharingStarted.WhileSubscribed(5_000))
     private val _inputEvents = MutableSharedFlow<UserInputEvent>()
 
     init {
@@ -137,10 +134,22 @@ class AuthViewModel @Inject constructor(
                                 _uiState.update {
                                     it.copy(isFetchingUser = false)
                                 }
-                                _events.emit(ScreenEvent.ShowToast(
-                                        R.string.user_logged_in, user.username))
+//                                _events.emit(ScreenEvent.ShowToast(
+//                                        R.string.user_logged_in, user.username))
+                               userPreferences.updateData { currentSettings ->
+                                   currentSettings.toBuilder()
+                                       .setSignInPrefs(SignInPrefs.newBuilder()
+                                           .setUsername(user.username)
+                                           .setName("${user.firstName} ${user.lastName}")
+                                           .setRole(user.role)
+                                           .setRefreshToken(user.refreshToken)
+                                           .setAccessToken(user.accessToken)
+                                           .build())
+                                       .build()
+                               }
                                handle[USERNAME] = username.value.copy(errorMessage = null)
                                 handle[PASSWORD] = password.value.copy(errorMessage = null)
+                                _events.emit(ScreenEvent.SignIn)
                             }
                             .onFailure {
                                 _uiState.update {
@@ -162,7 +171,7 @@ class AuthViewModel @Inject constructor(
 //                                        else -> {
 //                                        }
 //                                    }
-                                    mainViewModel.setErrorMessage(error)
+                                    _events.emit(ScreenEvent.ShowSnackbar(error))
                                 }
 //                                _events.emit(ScreenEvent.ShowToast(
 //                                    R.string.user_logged_in, it.localizedMessage))

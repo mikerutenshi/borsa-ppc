@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 sealed class DrawerScreens(val title: String, val route: String) {
-    object Auth : DrawerScreens("Autentikasi", "auth")
+    object Main : DrawerScreens("Main", "main")
+    object Auth : DrawerScreens("Keluar", "auth")
     object Work : DrawerScreens("Pekerjaan", "work")
     object Worker : DrawerScreens("Tukang", "worker")
     object Product : DrawerScreens( "Sepatu", "product")
@@ -24,7 +25,8 @@ private val screens = listOf(
     DrawerScreens.Work,
     DrawerScreens.Worker,
     DrawerScreens.Product,
-    DrawerScreens.Report
+    DrawerScreens.Report,
+    DrawerScreens.Auth
 )
 
 @Composable

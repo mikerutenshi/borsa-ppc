@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.android.borsappc.ui.auth.AuthScreen
-import com.android.borsappc.ui.auth.AuthViewModel
 import com.android.borsappc.ui.product.ProductScreen
 import com.android.borsappc.ui.report.ReportScreen
 import com.android.borsappc.ui.work.WorkScreen
@@ -16,15 +15,23 @@ import com.android.borsappc.ui.worker.WorkerScreen
 fun BorsaPPCNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel
+    initialScreen: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = DrawerScreens.Work.route,
+        startDestination = initialScreen,
         modifier = modifier
     ) {
+        composable(route = DrawerScreens.Main.route) {
+            MainScreen(navController)
+        }
+
         composable(route = DrawerScreens.Auth.route) {
-            AuthScreen(authViewModel)
+//            val parentEntry = remember(backStackEntry) {
+//                navController.getBackStackEntry(DrawerScreens.Main.route)
+//            }
+//            val parentViewModel = hiltViewModel<MainViewModel>(parentEntry)
+            AuthScreen(navController)
         }
 
         composable(route = DrawerScreens.Work.route) {
