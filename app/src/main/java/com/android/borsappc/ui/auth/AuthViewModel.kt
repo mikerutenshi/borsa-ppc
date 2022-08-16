@@ -21,8 +21,7 @@ class InputErrors(
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val handle: SavedStateHandle,
-    private val userPreferences: DataStore<UserPreferences>
+    private val handle: SavedStateHandle
 ) : ViewModel() {
     val username = handle.getStateFlow(USERNAME, InputWrapper())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), InputWrapper())
@@ -134,47 +133,43 @@ class AuthViewModel @Inject constructor(
                                 _uiState.update {
                                     it.copy(isFetchingUser = false)
                                 }
-//                                _events.emit(ScreenEvent.ShowToast(
-//                                        R.string.user_logged_in, user.username))
-                               userPreferences.updateData { currentSettings ->
-                                   currentSettings.toBuilder()
-                                       .setSignInPrefs(SignInPrefs.newBuilder()
-                                           .setUsername(user.username)
-                                           .setName("${user.firstName} ${user.lastName}")
-                                           .setRole(user.role)
-                                           .setRefreshToken(user.refreshToken)
-                                           .setAccessToken(user.accessToken)
-                                           .build())
-                                       .build()
-                               }
-                               handle[USERNAME] = username.value.copy(errorMessage = null)
+
+                                handle[USERNAME] = username.value.copy(errorMessage = null)
                                 handle[PASSWORD] = password.value.copy(errorMessage = null)
-                                _events.emit(ScreenEvent.SignIn)
+
+                                authRepository.storeSignInData(user)
+                                    .onSuccess {
+                                        _events.emit(ScreenEvent.NavigateToMain(user))
+                                    }
+                                    .onFailure { error ->
+                                        error.message?.let {
+                                            _events.emit(ScreenEvent.ShowSnackbar(it))
+                                        }
+                                    }
                             }
+
                             .onFailure {
                                 _uiState.update {
                                     it.copy(isFetchingUser = false)
                                 }
                                 val error = it.localizedMessage
                                 if (error != null) {
-//                                    when {
-//                                        error.lowercase().contains("username") -> {
-//                                            focusedTextField = FocusedTextFieldKey.USERNAME
-//                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
-//                                            handle[USERNAME] = password.value.copy(errorMessage = error)
-//                                        }
-//                                        error.lowercase().contains("password") -> {
-//                                            focusedTextField = FocusedTextFieldKey.PASSWORD
-//                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
-//                                            handle[PASSWORD] = password.value.copy(errorMessage = error)
-//                                        }
-//                                        else -> {
-//                                        }
-//                                    }
-                                    _events.emit(ScreenEvent.ShowSnackbar(error))
+                                    when {
+                                        error.lowercase().contains("username") -> {
+                                            focusedTextField = FocusedTextFieldKey.USERNAME
+                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
+                                            handle[USERNAME] = password.value.copy(errorMessage = error)
+                                        }
+                                        error.lowercase().contains("password") -> {
+                                            focusedTextField = FocusedTextFieldKey.PASSWORD
+                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
+                                            handle[PASSWORD] = password.value.copy(errorMessage = error)
+                                        }
+                                        else -> {
+                                            _events.emit(ScreenEvent.ShowSnackbar(error))
+                                        }
+                                    }
                                 }
-//                                _events.emit(ScreenEvent.ShowToast(
-//                                    R.string.user_logged_in, it.localizedMessage))
                             }
                     }
                 }

@@ -30,7 +30,8 @@ private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 private const val PREF_ACCESS_TOKEN = "PREF_ACCESS_TOKEN";
 private const val PREF_REFRESH_TOKEN = "PREF_REFRESH_TOKEN";
 private const val PREF_ROLE = "PREF_ROLE";
-private const val PREF_NAME = "PREF_NAME";
+private const val PREF_FIRST_NAME = "PREF_FIRST_NAME";
+private const val PREF_LAST_NAME = "PREF_LAST_NAME";
 private const val PREF_USERNAME = "PREF_USERNAME";
 private const val PREF_WORKER_FILTER_STATUS = "PREF_WORKER_FILTER_STATUS";
 private const val PREF_WORK_FILTER_STATUS = "PREF_WORK_FILTER_STATUS";
@@ -60,11 +61,12 @@ object  DataStoreModule {
                     sharedPrefs: SharedPreferencesView, currentData: UserPreferences ->
                         currentData.toBuilder()
                             .setSignInPrefs(SignInPrefs.newBuilder()
-                                .setAccessToken(sharedPrefs.getString(PREF_ACCESS_TOKEN))
-                                .setRefreshToken(sharedPrefs.getString(PREF_REFRESH_TOKEN))
-                                .setRole(sharedPrefs.getString(PREF_ROLE))
-                                .setName(sharedPrefs.getString(PREF_NAME))
-                                .setUsername(sharedPrefs.getString(PREF_USERNAME))
+                                .setAccessToken(sharedPrefs.getString(PREF_ACCESS_TOKEN, ""))
+                                .setRefreshToken(sharedPrefs.getString(PREF_REFRESH_TOKEN, ""))
+                                .setRole(sharedPrefs.getString(PREF_ROLE, ""))
+                                .setFirstName(sharedPrefs.getString(PREF_FIRST_NAME, ""))
+                                .setLastName(sharedPrefs.getString(PREF_LAST_NAME, ""))
+                                .setUsername(sharedPrefs.getString(PREF_USERNAME, ""))
                             ).build()
                 }
             ),

@@ -7,7 +7,7 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 
 @HiltAndroidApp
-class BorsaPPCApplication  : Application() {
+class BorsaPpcApplication  : Application() {
 
     override fun onCreate() {
         super.onCreate()

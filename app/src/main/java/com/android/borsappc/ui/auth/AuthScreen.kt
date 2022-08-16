@@ -1,5 +1,6 @@
 package com.android.borsappc.ui.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -30,16 +31,30 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
+import com.android.borsappc.getActivity
 import com.android.borsappc.toast
 import com.android.borsappc.ui.*
 import com.android.borsappc.ui.main.DrawerScreens
+import com.android.borsappc.ui.main.MainScreen
 import timber.log.Timber
+
+object AuthScreen : AndroidScreen() {
+    @Composable
+    override fun Content() {
+        val viewModel = getViewModel<AuthViewModel>()
+        AuthScreenContent(viewModel)
+    }
+
+}
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-fun AuthScreen(navController: NavHostController) {
-    val viewModel = hiltViewModel<AuthViewModel>()
+fun AuthScreenContent(viewModel: AuthViewModel) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
@@ -47,6 +62,7 @@ fun AuthScreen(navController: NavHostController) {
     val usernameFocusRequester = remember { FocusRequester() }
     val passwordFocusRequester = remember { FocusRequester() }
     val scaffoldState = rememberScaffoldState()
+    val navigator = LocalNavigator.currentOrThrow
 
     val events = remember(viewModel.events, lifecycleOwner) {
         viewModel.events.flowWithLifecycle(
@@ -59,6 +75,11 @@ fun AuthScreen(navController: NavHostController) {
     val password by viewModel.password.collectAsStateWithLifecycle()
     val areInputValid by viewModel.areInputValid.collectAsStateWithLifecycle()
 
+//    val activity = LocalContext.current.getActivity()
+//
+//    BackHandler() {
+//        activity?.finish()
+//    }
 
     LaunchedEffect(Unit) {
         Timber.d("launchedEffect triggered")
@@ -79,22 +100,25 @@ fun AuthScreen(navController: NavHostController) {
                 }
                 is ScreenEvent.MoveFocus -> focusManager.moveFocus(event.direction)
                 is ScreenEvent.ShowSnackbar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
+
+                    val result
+                    = scaffoldState.snackbarHostState.showSnackbar(
                         event.message,
                         "Dismiss",
                         SnackbarDuration.Indefinite)
                     when (result) {
-                        SnackbarResult.Dismissed -> Unit
+                        SnackbarResult.Dismissed -> {}
                         SnackbarResult.ActionPerformed ->
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                     }
                 }
-                is ScreenEvent.SignIn -> {
-                    val dashboardRoute = DrawerScreens.Main.route
-                    navController.navigate(dashboardRoute) {
-                        popUpTo(dashboardRoute)
-                        launchSingleTop = true
-                    }
+                is ScreenEvent.NavigateToMain -> {
+//                    val dashboardRoute = DrawerScreens.Main.route
+//                    navController.navigate(dashboardRoute) {
+//                        popUpTo(dashboardRoute)
+//                        launchSingleTop = true
+//                    }
+                    navigator.replaceAll(MainScreen(event.user))
                 }
             }
         }

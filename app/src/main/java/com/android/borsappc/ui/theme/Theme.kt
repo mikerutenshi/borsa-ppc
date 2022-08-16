@@ -34,7 +34,7 @@ private val DraculaColorPalette = darkColors(
 private val LightColorPalette = lightColors()
 
 @Composable
-fun BorsaPPCTheme(
+fun BorsaPpcTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

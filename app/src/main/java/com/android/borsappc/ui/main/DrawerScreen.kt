@@ -10,7 +10,11 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import com.android.borsappc.data.model.User
+import java.util.*
 
 sealed class DrawerScreens(val title: String, val route: String) {
     object Main : DrawerScreens("Main", "main")
@@ -31,9 +35,11 @@ private val screens = listOf(
 
 @Composable
 fun Drawer(modifier: Modifier = Modifier,
-    onDestinationClicked: (route: String) -> Unit) {
+           user: User,
+           onDestinationClicked: (route: String) -> Unit
+    ) {
     Column(modifier = Modifier.padding(24.dp)) {
-        Text("Navigation",
+        Text("Selamat datang, ${user.username.capitalize(Locale.current)}",
             style = typography.h4)
         Spacer(modifier = Modifier.height(24.dp))
         Divider()
