@@ -1,6 +1,5 @@
 package com.android.borsappc.ui.auth
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -25,21 +24,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.navigation.NavHostController
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
-import com.android.borsappc.getActivity
 import com.android.borsappc.toast
 import com.android.borsappc.ui.*
-import com.android.borsappc.ui.main.DrawerScreens
 import com.android.borsappc.ui.main.MainScreen
 import timber.log.Timber
 
@@ -75,22 +70,16 @@ fun AuthScreenContent(viewModel: AuthViewModel) {
     val password by viewModel.password.collectAsStateWithLifecycle()
     val areInputValid by viewModel.areInputValid.collectAsStateWithLifecycle()
 
-//    val activity = LocalContext.current.getActivity()
-//
-//    BackHandler() {
-//        activity?.finish()
-//    }
-
     LaunchedEffect(Unit) {
         Timber.d("launchedEffect triggered")
         events.collect { event ->
             when (event) {
-                is ScreenEvent.ShowToast -> context.toast(event.messageId, event.param)
-                is ScreenEvent.UpdateKeyboard -> {
+                is AuthScreenEvent.ShowToast -> context.toast(event.messageId, event.param)
+                is AuthScreenEvent.UpdateKeyboard -> {
                     if (event.show) keyboardController?.show() else keyboardController?.hide()
                 }
-                is ScreenEvent.ClearFocus -> focusManager.clearFocus()
-                is ScreenEvent.RequestFocus -> {
+                is AuthScreenEvent.ClearFocus -> focusManager.clearFocus()
+                is AuthScreenEvent.RequestFocus -> {
                     Timber.d("requestFocus triggered")
                     when (event.textFieldKey) {
                         FocusedTextFieldKey.USERNAME -> usernameFocusRequester.requestFocus()
@@ -98,8 +87,8 @@ fun AuthScreenContent(viewModel: AuthViewModel) {
                         FocusedTextFieldKey.NONE -> focusManager.clearFocus()
                     }
                 }
-                is ScreenEvent.MoveFocus -> focusManager.moveFocus(event.direction)
-                is ScreenEvent.ShowSnackbar -> {
+                is AuthScreenEvent.MoveFocus -> focusManager.moveFocus(event.direction)
+                is AuthScreenEvent.ShowSnackbar -> {
 
                     val result
                     = scaffoldState.snackbarHostState.showSnackbar(
@@ -112,12 +101,7 @@ fun AuthScreenContent(viewModel: AuthViewModel) {
                             scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                     }
                 }
-                is ScreenEvent.NavigateToMain -> {
-//                    val dashboardRoute = DrawerScreens.Main.route
-//                    navController.navigate(dashboardRoute) {
-//                        popUpTo(dashboardRoute)
-//                        launchSingleTop = true
-//                    }
+                is AuthScreenEvent.NavigateToMain -> {
                     navigator.replaceAll(MainScreen(event.user))
                 }
             }

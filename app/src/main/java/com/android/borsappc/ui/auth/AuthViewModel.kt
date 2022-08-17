@@ -1,9 +1,6 @@
 package com.android.borsappc.ui.auth
 
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.*
-import com.android.borsappc.SignInPrefs
-import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.UserSignIn
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.ui.*
@@ -43,7 +40,7 @@ class AuthViewModel @Inject constructor(
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5_000), AuthUiState())
 
-    private val _events = MutableSharedFlow<ScreenEvent>()
+    private val _events = MutableSharedFlow<AuthScreenEvent>()
     val events = _events.asSharedFlow().shareIn(
         viewModelScope, SharingStarted.WhileSubscribed(5_000))
     private val _inputEvents = MutableSharedFlow<UserInputEvent>()
@@ -72,7 +69,7 @@ class AuthViewModel @Inject constructor(
 
     fun onUsernameImeActionClick() {
         viewModelScope.launch(Dispatchers.Default) {
-            _events.emit(ScreenEvent.MoveFocus())
+            _events.emit(AuthScreenEvent.MoveFocus())
         }
     }
 
@@ -82,96 +79,64 @@ class AuthViewModel @Inject constructor(
 
     fun onTextFieldFocusChanged(key: FocusedTextFieldKey, isFocused: Boolean) {
         focusedTextField = if (isFocused) key else focusedTextField
-        Timber.d("onFocusChanged triggered %s %s", key, focusedTextField)
     }
 
     fun onContinueClick() {
-        Timber.d("onContinueClick triggered")
         val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
             Timber.d("Exception caught: $coroutineContext - ${throwable.localizedMessage}")
         }
         viewModelScope.launch(Dispatchers.Default + handler) {
-//            val resId = if (areInputsValid.value) R.string.validation_success else
-//                R.string.validation_fail
-//            _events.send(ScreenEvent.ShowToast(resId))
+
             when (val inputErrors = getInputErrorsOrNull()) {
                 null -> {
                     clearFocusAndHideKeyboard()
-                    Timber.d("onContinueClickEmit triggered")
-//                    _events.emit(ScreenEvent.ShowToast(R.string.validation_success))
-//                    authRepository.signIn(UserSignIn(username.value.value,
-//                        password.value.value))
-//                        .onStart {
-//                            Timber.d("onStart triggered")
-//                            /*todo show progress bar*/
-//                        }
-//                        .catch { exception ->
-//                            _uiState.update {
-//                                val errorMessage = if (exception is HttpException) {
-//                                    Message(exception.code(), exception.message())
-//                                } else {
-//                                    exception.localizedMessage?.let { message ->
-//                                        Message(null, message) } ?:
-//                                    Message(null, "terdapat error")
-//                                }
-//                                val messages = _uiState.value.messages
-//                                messages.add(errorMessage)
-//                                it.copy(messages = messages)
-//                            }
-//                        }
-//                        .collect { user ->
-//                            Timber.d("${user.username} is collected")
-//                            _events.emit(ScreenEvent.ShowToast(R.string.user_logged_in, user.username))
-//                        }
                     _uiState.update {
                         it.copy(isFetchingUser = true)
                     }
-                    launch() {
-                        authRepository.signIn(UserSignIn(
-                            username.value.value.lowercase(), password.value.value))
-                            .onSuccess { user ->
-                                _uiState.update {
-                                    it.copy(isFetchingUser = false)
-                                }
-
-                                handle[USERNAME] = username.value.copy(errorMessage = null)
-                                handle[PASSWORD] = password.value.copy(errorMessage = null)
-
-                                authRepository.storeSignInData(user)
-                                    .onSuccess {
-                                        _events.emit(ScreenEvent.NavigateToMain(user))
-                                    }
-                                    .onFailure { error ->
-                                        error.message?.let {
-                                            _events.emit(ScreenEvent.ShowSnackbar(it))
-                                        }
-                                    }
+                    authRepository.signIn(UserSignIn(
+                        username.value.value.lowercase(), password.value.value))
+                        .onSuccess { user ->
+                            _uiState.update {
+                                it.copy(isFetchingUser = false)
                             }
 
-                            .onFailure {
-                                _uiState.update {
-                                    it.copy(isFetchingUser = false)
+                            handle[USERNAME] = username.value.copy(errorMessage = null)
+                            handle[PASSWORD] = password.value.copy(errorMessage = null)
+
+                            authRepository.storeSignInData(user)
+                                .onSuccess {
+                                    _events.emit(AuthScreenEvent.NavigateToMain(user))
                                 }
-                                val error = it.localizedMessage
-                                if (error != null) {
-                                    when {
-                                        error.lowercase().contains("username") -> {
-                                            focusedTextField = FocusedTextFieldKey.USERNAME
-                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
-                                            handle[USERNAME] = password.value.copy(errorMessage = error)
-                                        }
-                                        error.lowercase().contains("password") -> {
-                                            focusedTextField = FocusedTextFieldKey.PASSWORD
-                                            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
-                                            handle[PASSWORD] = password.value.copy(errorMessage = error)
-                                        }
-                                        else -> {
-                                            _events.emit(ScreenEvent.ShowSnackbar(error))
-                                        }
+                                .onFailure { error ->
+                                    error.message?.let {
+                                        _events.emit(AuthScreenEvent.ShowSnackbar(it))
+                                    }
+                                }
+                        }
+
+                        .onFailure {
+                            _uiState.update {
+                                it.copy(isFetchingUser = false)
+                            }
+                            val error = it.localizedMessage
+                            if (error != null) {
+                                when {
+                                    error.lowercase().contains("username") -> {
+                                        focusedTextField = FocusedTextFieldKey.USERNAME
+                                        _events.emit(AuthScreenEvent.RequestFocus(focusedTextField))
+                                        handle[USERNAME] = username.value.copy(errorMessage = error)
+                                    }
+                                    error.lowercase().contains("password") -> {
+                                        focusedTextField = FocusedTextFieldKey.PASSWORD
+                                        _events.emit(AuthScreenEvent.RequestFocus(focusedTextField))
+                                        handle[PASSWORD] = password.value.copy(errorMessage = error)
+                                    }
+                                    else -> {
+                                        _events.emit(AuthScreenEvent.ShowSnackbar(error))
                                     }
                                 }
                             }
-                    }
+                        }
                 }
                 else -> displayInputErrors(inputErrors)
             }
@@ -182,8 +147,8 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default) {
             Timber.d("focusOnLastSelectedField triggered %s", focusedTextField)
             delay(1000L)
-            _events.emit(ScreenEvent.RequestFocus(focusedTextField))
-            _events.emit(ScreenEvent.UpdateKeyboard(true))
+            _events.emit(AuthScreenEvent.RequestFocus(focusedTextField))
+            _events.emit(AuthScreenEvent.UpdateKeyboard(true))
         }
     }
 
@@ -266,8 +231,8 @@ class AuthViewModel @Inject constructor(
     }
 
     private suspend fun clearFocusAndHideKeyboard() {
-        _events.emit(ScreenEvent.ClearFocus)
-        _events.emit(ScreenEvent.UpdateKeyboard(false))
+        _events.emit(AuthScreenEvent.ClearFocus)
+        _events.emit(AuthScreenEvent.UpdateKeyboard(false))
         focusedTextField = FocusedTextFieldKey.NONE
     }
 }

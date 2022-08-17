@@ -15,6 +15,7 @@ import com.android.borsappc.data.model.User
 import com.android.borsappc.ui.auth.AuthScreen
 import com.android.borsappc.ui.main.Drawer
 import com.android.borsappc.ui.main.DrawerScreens
+import com.android.borsappc.ui.main.MainUiState
 import com.android.borsappc.ui.main.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,26 +28,24 @@ fun DashboardScaffold(
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
     user: User,
+    uiState: MainUiState,
     scaffoldContent: @Composable (paddingValues: PaddingValues) -> Unit
 ) {
     BottomDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Drawer(user = user) { route ->
-                scope.launch {
-                    drawerState.close()
-                }
+            Drawer(
+                user = user,
+                uiState = uiState
+            ) { route ->
+                if (route == DrawerScreens.Auth.route) {
+                    viewModel.signOut()
+                } else {
+                    scope.launch {
+                        drawerState.close()
+                    }
 
-//                if (route == DrawerScreens.Auth.route) {
-//                    navHostController.navigate(route) {
-//                        navHostController.graph.startDestinationRoute?.let { popUpTo(it) }
-//                        launchSingleTop = true
-//                    }
-//                } else {
-//                    viewModel.changeScaffoldContent(screenRoute = route)
-//                }
-                when (route) {
-                    DrawerScreens.Auth.route -> viewModel.signOut()
+                    viewModel.navigateTo(route)
                 }
             }
         }
