@@ -9,11 +9,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.core.screen.uniqueScreenKey
 
 class WorkScreen : AndroidScreen() {
 
-//    override val key: ScreenKey = uniqueScreenKey
+    override val key: ScreenKey = "WorkScreen"
 
     @Composable
     override fun Content() {

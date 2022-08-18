@@ -11,14 +11,15 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.android.borsappc.R
 import com.android.borsappc.data.model.User
-import java.util.*
+import java.time.LocalTime
 
 sealed class DrawerScreens(val title: String, val route: String) {
     object Auth : DrawerScreens("Keluar", "auth")
@@ -49,7 +50,19 @@ fun Drawer(modifier: Modifier = Modifier,
             Text("Sampai ketemu lagi, ${user.username.capitalize(Locale.current)} ...",
                 style = typography.h4)
         } else {
-            Text("Selamat datang, ${user.username.capitalize(Locale.current)}",
+            val currentTime = LocalTime.now()
+            val name = "${user.firstName} ${user.lastName ?: ""}"
+            val greetings = when {
+                currentTime.isAfter(LocalTime.of(17, 59)) ->
+                        stringResource(id = R.string.good_evening_user, name)
+                currentTime.isAfter(LocalTime.of(11, 59)) ->
+                    stringResource(id = R.string.good_afternoon_user, name)
+                currentTime.isAfter(LocalTime.of(0, 0)) ->
+                    stringResource(id = R.string.good_morning_user, name)
+
+                else -> stringResource(id = R.string.welcome_user, name)
+            }
+            Text(greetings,
                 style = typography.h4)
         }
         Spacer(modifier = Modifier.height(24.dp))

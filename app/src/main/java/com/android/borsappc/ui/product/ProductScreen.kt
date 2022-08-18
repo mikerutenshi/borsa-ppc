@@ -8,11 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.core.screen.uniqueScreenKey
 
 class ProductScreen : AndroidScreen() {
 
-//    override val key: ScreenKey = uniqueScreenKey
+    override val key: ScreenKey = "ProductScreen"
 
     @Composable
     override fun Content() {

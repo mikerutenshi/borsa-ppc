@@ -34,7 +34,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
 import com.android.borsappc.toast
-import com.android.borsappc.ui.*
+import com.android.borsappc.ui.CustomTextField
+import com.android.borsappc.ui.White
 import com.android.borsappc.ui.main.MainScreen
 import timber.log.Timber
 
@@ -189,7 +190,7 @@ fun AuthScreenContent(viewModel: AuthViewModel) {
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                     }
-                    Text(text = stringResource(id = R.string.signin_continue))
+                    Text(text = stringResource(id = R.string.btn_continue))
                 }
             }
         }
