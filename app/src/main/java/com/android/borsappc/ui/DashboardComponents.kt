@@ -8,9 +8,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
+import com.android.borsappc.data.model.User
+import com.android.borsappc.ui.auth.AuthScreen
 import com.android.borsappc.ui.main.Drawer
 import com.android.borsappc.ui.main.DrawerScreens
+import com.android.borsappc.ui.main.MainUiState
 import com.android.borsappc.ui.main.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -19,27 +24,28 @@ import kotlinx.coroutines.launch
 @Composable
 fun DashboardScaffold(
     viewModel: MainViewModel,
-    navHostController: NavHostController,
     drawerState: BottomDrawerState,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
+    user: User,
+    uiState: MainUiState,
     scaffoldContent: @Composable (paddingValues: PaddingValues) -> Unit
 ) {
     BottomDrawer(
         drawerState = drawerState,
         drawerContent = {
-            Drawer() { route ->
-                scope.launch {
-                    drawerState.close()
-                }
-
+            Drawer(
+                user = user,
+                uiState = uiState
+            ) { route ->
                 if (route == DrawerScreens.Auth.route) {
-                    navHostController.navigate(route) {
-                        navHostController.graph.startDestinationRoute?.let { popUpTo(it) }
-                        launchSingleTop = true
-                    }
+                    viewModel.signOut()
                 } else {
-                    viewModel.changeScaffoldContent(screenRoute = route)
+                    scope.launch {
+                        drawerState.close()
+                    }
+
+                    viewModel.navigateTo(route)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.android.borsappc.ui
+package com.android.borsappc.ui.auth
 
 sealed class UserInputEvent {
     class Username(val input: String) : UserInputEvent()

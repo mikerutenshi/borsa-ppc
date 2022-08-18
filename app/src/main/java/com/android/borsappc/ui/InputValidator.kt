@@ -8,7 +8,7 @@ const val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).
 object InputValidator {
     fun getUsernameErrorIdOrNull(input: String): Int? {
         return when {
-            input.length < 2 -> R.string.error_username_too_short
+            input.length < 3 -> R.string.error_username_too_short
             else -> null
         }
     }

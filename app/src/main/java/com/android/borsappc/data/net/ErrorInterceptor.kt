@@ -75,7 +75,6 @@ class ErrorInterceptor(
         synchronized(this) {
             runBlocking {
                 val username = userPreferences.data.last().signInPrefs.username
-                val userNameModel = Username(username)
                 val signOutResponse: GenericResponse<Unit> =
                     authDataSource.get().signOut(username)
 
