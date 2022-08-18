@@ -9,14 +9,12 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import dagger.Lazy
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import retrofit2.Retrofit
 import timber.log.Timber
 import java.io.IOException
 
@@ -57,11 +55,11 @@ class RefreshTokenAuthenticator(
                 retryCounter++
 
                 val refreshToken = runBlocking {
-                    userPreferences.data.last().signInPrefs.refreshToken
+                    userPreferences.data.first().signInPrefs.refreshToken
                 }
                 Timber.d("mRefreshToken: %s", refreshToken)
                 val username = runBlocking {
-                    userPreferences.data.last().signInPrefs.username
+                    userPreferences.data.first().signInPrefs.username
                 }
                 val refreshTokenModel = UserRefreshToken(username, refreshToken)
                 val userAccessToken: UserAccessToken =

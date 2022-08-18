@@ -2,22 +2,18 @@ package com.android.borsappc.data.net
 
 import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
-import com.android.borsappc.data.model.Username
-import com.android.borsappc.data.net.datasource.AuthDataSource
 import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
 import com.android.borsappc.data.net.response.GenericResponse
-import com.android.borsappc.data.net.service.AuthService
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import dagger.Lazy
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain
 import okhttp3.Response
-import retrofit2.Retrofit
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -74,7 +70,7 @@ class ErrorInterceptor(
     private fun signOut() {
         synchronized(this) {
             runBlocking {
-                val username = userPreferences.data.last().signInPrefs.username
+                val username = userPreferences.data.first().signInPrefs.username
                 val signOutResponse: GenericResponse<Unit> =
                     authDataSource.get().signOut(username)
 
