@@ -1,7 +1,6 @@
 package com.android.borsappc.data.repository
 
 import androidx.datastore.core.DataStore
-import com.android.borsappc.SignInPrefs
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.User
 import com.android.borsappc.data.model.UserSignIn
@@ -14,7 +13,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
-    private val authRemoteDataSource: AuthRemoteDataSource,
+    private val authRemoteDataSource:
+    AuthRemoteDataSource,
     private val userPrefs: DataStore<UserPreferences>
 ) {
 //    fun signIn(signIn: UserSignIn): Flow<User> {
