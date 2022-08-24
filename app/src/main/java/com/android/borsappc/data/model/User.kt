@@ -1,8 +1,11 @@
 package com.android.borsappc.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class User(
+@Parcelize
+data class User (
     @SerializedName("id")
     val id: Int? = null,
     @SerializedName("username")
@@ -17,4 +20,4 @@ data class User(
     val accessToken: String,
     @SerializedName("refresh_token")
     val refreshToken: String
-)
+) : Parcelable

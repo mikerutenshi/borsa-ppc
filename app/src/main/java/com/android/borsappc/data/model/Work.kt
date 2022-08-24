@@ -3,54 +3,71 @@ package com.android.borsappc.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDateTime
+
+object Position {
+    const val DRAWER = "drawer"
+    const val SEWER = "sewer"
+    const val ASSEMBLER = "assembler"
+    const val SOLE_STITCHER = "sole_stitcher"
+    const val LINING_DRAWER = "lining_drawer"
+    const val INSOLE_STITCHER = "insole_stitcher"
+}
 
 @Entity(tableName = "works")
 data class Work(
     @PrimaryKey
     @SerializedName("work_id")
-    val id: Int?,
+    var id: Int = 123,
     @SerializedName("spk_no")
-    val spkNo: Int?,
+    var spkNo: Int = 1234,
     @SerializedName("product_id")
-    val productId: Int?,
+    var productId: Int = 123,
     @SerializedName("article_no")
-    val articleNo: String?,
+    var articleNo: String = "A12345",
     @SerializedName("product_category_name")
-    val productCategoryName: String?,
+    var productCategoryName: String = "Men Shoes",
     @SerializedName("product_quantity")
-    val qty: Int?,
-    @SerializedName("is_drawn")
-    val isDrawn: Boolean,
-    @SerializedName("is_sewn")
-    val isSewn: Boolean,
-    @SerializedName("is_assembled")
-    val isAssembled: Boolean,
-    @SerializedName("is_sole_stitched")
-    val isSoleStitched: Boolean,
-    @SerializedName("is_lining_drawn")
-    val isLiningDrawn: Boolean,
-    @SerializedName("is_insole_stitched")
-    val isInsoleStitched: Boolean,
+    var quantity: Int = 12,
+    @SerializedName("work_in_progress")
+    var workInProgress: List<WorkInProgress> = listOf(
+        WorkInProgress(Position.DRAWER),
+        WorkInProgress(Position.ASSEMBLER),
+        WorkInProgress(Position.INSOLE_STITCHER)
+    ),
+    @SerializedName("work_done")
+    var workDone: List<WorkDone> = listOf(
+        WorkDone(Position.DRAWER, 5),
+        WorkDone(Position.ASSEMBLER, 5),
+        WorkDone(Position.INSOLE_STITCHER, 5)
+    ),
     @SerializedName("drawing_cost")
-    val drawingCost: Int,
+    var drawingCost: Int = 1234,
     @SerializedName("sewing_cost")
-    val sewingCost: Int,
+    var sewingCost: Int = 1234,
     @SerializedName("assembling_cost")
-    val assemblingCost: Int,
+    var assemblingCost: Int = 1234,
     @SerializedName("sole_stitching_cost")
-    val soleStitchingCost: Int,
+    var soleStitchingCost: Int = 1234,
     @SerializedName("lining_drawing_cost")
-    val liningDrawingCost: Int,
+    var liningDrawingCost: Int = 1234,
     @SerializedName("insole_stitching_cost")
-    val insoleStitchingCost: Int,
+    var insoleStitchingCost: Int = 0,
     @SerializedName("created_at")
-    val createdAt: String?,
+    var createdAt: String = LocalDateTime.now().toString(),
     @SerializedName("updated_at")
-    val updatedAt: String?,
+    var updatedAt: String? = null,
     @SerializedName("notes")
-    val notes: String?,
-    @Transient
-    var isChecked: Boolean,
-    @Transient
-    var isSelected: Boolean
-    )
+    var notes: String? = "abcdefg",
+)
+
+data class WorkInProgress(
+    var position: String
+)
+
+data class WorkDone(
+    @SerializedName("position")
+    var position: String,
+    @SerializedName("sum")
+    var doneQuantity: Int
+)

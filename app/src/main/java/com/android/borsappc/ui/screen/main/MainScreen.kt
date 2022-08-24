@@ -1,13 +1,13 @@
-package com.android.borsappc.ui.main
+package com.android.borsappc.ui.screen.main
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.flowWithLifecycle
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.CurrentScreen
@@ -16,14 +16,14 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.data.model.User
 import com.android.borsappc.ui.DashboardScaffold
-import com.android.borsappc.ui.auth.AuthScreen
-import com.android.borsappc.ui.product.ProductScreen
-import com.android.borsappc.ui.report.ReportScreen
-import com.android.borsappc.ui.work.WorkScreen
-import com.android.borsappc.ui.worker.WorkerScreen
+import com.android.borsappc.ui.screen.auth.AuthScreen
+import com.android.borsappc.ui.screen.product.ProductScreen
+import com.android.borsappc.ui.screen.report.ReportScreen
+import com.android.borsappc.ui.screen.work.WorkScreen
+import com.android.borsappc.ui.screen.worker.WorkerScreen
 import timber.log.Timber
 
-class MainScreen(private val user: User) : AndroidScreen() {
+data class MainScreen(val user: User) : AndroidScreen() {
 
     @Composable
     override fun Content() {
@@ -90,7 +90,9 @@ fun MainScreenContent(viewModel: MainViewModel, user: User) {
         user = user,
         uiState = uiState
     ) {
-        CurrentScreen()
+        Surface(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+            CurrentScreen()
+        }
     }
 }
 

@@ -1,6 +1,9 @@
 package com.android.borsappc.data.repository
 
-import androidx.paging.*
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
+import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.android.borsappc.data.db.AppDatabase
 import com.android.borsappc.data.model.RemoteKey
@@ -10,30 +13,24 @@ import com.android.borsappc.data.net.service.WorkService
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.IOException
-import javax.inject.Inject
 
 const val WORK_REMOTE_KEY_QUERY: String = "work_remote_key_query"
 
 @OptIn(ExperimentalPagingApi::class)
-class WorkRemoteMediator @Inject constructor(
+class WorkRemoteMediator constructor(
     private val query: WorkQuery,
     private val database: AppDatabase,
     private val retrofit: Retrofit
 ) : RemoteMediator<Int, Work>() {
 
+
     private val workDao = database.workDao()
     private val remoteKeyDao = database.remoteKeyDao()
-    val pager = Pager(
-        config = PagingConfig(pageSize = 10),
-        remoteMediator = WorkRemoteMediator(WorkQuery(), database, retrofit)
-    ) {
-        workDao.pagingSource()
-    }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Work>): RemoteMediator.MediatorResult {
         return try {
             val loadKey = when (loadType) {
-                LoadType.REFRESH -> null
+                LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return RemoteMediator.MediatorResult.Success(true)
                 LoadType.APPEND -> {
                     val remoteKey = database.withTransaction {
@@ -41,7 +38,7 @@ class WorkRemoteMediator @Inject constructor(
                     }
 
                     if (remoteKey.nextKey == null) {
-                        return MediatorResult.Success(true)
+                        return RemoteMediator.MediatorResult.Success(true)
                     }
 
                     remoteKey.nextKey
@@ -49,7 +46,7 @@ class WorkRemoteMediator @Inject constructor(
             }
             val response = retrofit.create(WorkService::class.java).getWorks(
                 query.searchKeyword,
-                loadKey!!,
+                loadKey,
                 query.limit,
                 query.startDate,
                 query.endDate,

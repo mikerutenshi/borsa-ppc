@@ -2,7 +2,6 @@ package com.android.borsappc.data.net
 
 import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
-import com.android.borsappc.data.model.UserAccessToken
 import com.android.borsappc.data.model.UserRefreshToken
 import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
 import com.google.gson.JsonElement
@@ -54,20 +53,15 @@ class RefreshTokenAuthenticator(
             synchronized(this) {
                 retryCounter++
 
-                val refreshToken = runBlocking {
-                    userPreferences.data.first().signInPrefs.refreshToken
-                }
-                Timber.d("mRefreshToken: %s", refreshToken)
-                val username = runBlocking {
-                    userPreferences.data.first().signInPrefs.username
-                }
-                val refreshTokenModel = UserRefreshToken(username, refreshToken)
-                val userAccessToken: UserAccessToken =
-                    authRemoteDataSource.refreshToken(refreshTokenModel).data
+                return runBlocking {
+                    val refreshToken = userPreferences.data.first().signInPrefs.refreshToken
+                    Timber.d("mRefreshToken: %s", refreshToken)
+                    val username = userPreferences.data.first().signInPrefs.username
 
-                val newAccessToken = "Bearer " + userAccessToken.accessToken
+                    val refreshTokenModel = UserRefreshToken(username, refreshToken)
+                    val newAccessToken =
+                        authRemoteDataSource.refreshToken(refreshTokenModel).data.accessToken
 
-                runBlocking {
                     userPreferences.updateData { currentPrefs ->
                         currentPrefs.toBuilder()
                             .setSignInPrefs(
@@ -75,11 +69,10 @@ class RefreshTokenAuthenticator(
                                     .build()
                             ).build()
                     }
+                    response.request.newBuilder()
+                        .header("Authorization", "Bearer $newAccessToken")
+                        .build()
                 }
-
-                return response.request.newBuilder()
-                    .header("Authorization", newAccessToken)
-                    .build()
             }
         }
 

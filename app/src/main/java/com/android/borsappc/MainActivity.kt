@@ -3,19 +3,14 @@ package com.android.borsappc
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.Navigator
-import com.android.borsappc.data.model.User
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.ui.BorsaPpcTheme
-import com.android.borsappc.ui.auth.AuthScreen
-import com.android.borsappc.ui.main.MainScreen
+import com.android.borsappc.ui.screen.auth.AuthScreen
+import com.android.borsappc.ui.screen.main.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 

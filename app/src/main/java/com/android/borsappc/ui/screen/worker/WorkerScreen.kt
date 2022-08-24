@@ -1,4 +1,4 @@
-package com.android.borsappc.ui.worker
+package com.android.borsappc.ui.screen.worker
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

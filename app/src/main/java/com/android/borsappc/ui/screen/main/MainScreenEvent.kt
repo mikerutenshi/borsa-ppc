@@ -1,6 +1,4 @@
-package com.android.borsappc.ui.main
-
-import com.android.borsappc.data.model.User
+package com.android.borsappc.ui.screen.main
 
 sealed class MainScreenEvent  {
     class ShowSnackbar(val message: String) : MainScreenEvent()

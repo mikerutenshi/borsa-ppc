@@ -1,9 +1,12 @@
-package com.android.borsappc.ui.auth
+package com.android.borsappc.ui.screen.auth
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.borsappc.data.model.UserSignIn
 import com.android.borsappc.data.repository.AuthRepository
-import com.android.borsappc.ui.*
+import com.android.borsappc.ui.InputValidator
+import com.android.borsappc.ui.InputWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -21,6 +24,7 @@ class AuthViewModel @Inject constructor(
     private val handle: SavedStateHandle
 ) : ViewModel() {
     val username = handle.getStateFlow(USERNAME, InputWrapper())
+
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), InputWrapper())
     val password = handle.getStateFlow(PASSWORD, InputWrapper())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), InputWrapper())

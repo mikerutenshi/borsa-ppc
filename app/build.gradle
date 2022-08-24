@@ -196,10 +196,9 @@ dependencies {
 
     //==================== Database ====================
     implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-paging:2.5.0-alpha02"
+    implementation "androidx.room:room-paging:$room_version"
 
     //==================== Navigation ====================
     implementation "androidx.navigation:navigation-compose:2.5.1"
@@ -207,7 +206,7 @@ dependencies {
     // Navigator
     implementation "cafe.adriel.voyager:voyager-navigator:$voyager_version"
     // BottomSheetNavigator
-    implementation "cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyager_version"
+//    implementation "cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyager_version"
     // Transitions
     implementation "cafe.adriel.voyager:voyager-transitions:$voyager_version"
     // Android ViewModel integration

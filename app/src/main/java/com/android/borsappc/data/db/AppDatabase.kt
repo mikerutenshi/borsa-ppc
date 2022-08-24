@@ -1,9 +1,8 @@
 package com.android.borsappc.data.db
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.android.borsappc.data.model.RemoteKey
 import com.android.borsappc.data.model.Work
 
@@ -11,19 +10,8 @@ import com.android.borsappc.data.model.Work
     Work::class,
     RemoteKey::class],
     version = 1, exportSchema = false)
+@TypeConverters(DataConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-    companion object {
-        fun create(context: Context, useInMemory: Boolean): AppDatabase {
-            val databaseBuilder = if (useInMemory) {
-                Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            } else {
-                Room.databaseBuilder(context, AppDatabase::class.java, "borsa_ppc.db")
-            }
-            return databaseBuilder
-                .fallbackToDestructiveMigration()
-                .build()
-        }
-    }
     abstract fun workDao(): WorkDao
     abstract fun remoteKeyDao(): RemoteKeyDao
 }

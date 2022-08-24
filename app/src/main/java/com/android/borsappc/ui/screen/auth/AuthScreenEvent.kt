@@ -1,4 +1,4 @@
-package com.android.borsappc.ui.auth
+package com.android.borsappc.ui.screen.auth
 
 import androidx.compose.ui.focus.FocusDirection
 import com.android.borsappc.data.model.User

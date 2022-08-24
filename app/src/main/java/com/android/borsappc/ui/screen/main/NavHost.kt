@@ -1,15 +1,4 @@
-package com.android.borsappc.ui.main
-
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.android.borsappc.ui.auth.AuthScreen
-import com.android.borsappc.ui.product.ProductScreen
-import com.android.borsappc.ui.report.ReportScreen
-import com.android.borsappc.ui.work.WorkScreen
-import com.android.borsappc.ui.worker.WorkerScreen
+package com.android.borsappc.ui.screen.main
 
 //@Composable
 //fun BorsaPPCNavHost(

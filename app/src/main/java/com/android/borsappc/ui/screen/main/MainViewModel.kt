@@ -1,12 +1,8 @@
-package com.android.borsappc.ui.main
+package com.android.borsappc.ui.screen.main
 
-import androidx.datastore.core.DataStore
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.repository.AuthRepository
-import com.android.borsappc.ui.auth.AuthScreenEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

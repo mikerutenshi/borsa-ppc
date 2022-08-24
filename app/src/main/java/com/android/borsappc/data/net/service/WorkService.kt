@@ -12,7 +12,7 @@ interface WorkService {
     suspend fun storeWork(@Body work: Work): GenericResponse<Unit>
 
     @GET("v1-1/works")
-    fun getWorks(
+    suspend fun getWorks(
         @Query("search_keyword") searchKey: String?,
         @Query("page") page: Int,
         @Query("limit") limit: Int,

@@ -1,22 +1,23 @@
 package com.android.borsappc.ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
 import com.android.borsappc.data.model.User
-import com.android.borsappc.ui.auth.AuthScreen
-import com.android.borsappc.ui.main.Drawer
-import com.android.borsappc.ui.main.DrawerScreens
-import com.android.borsappc.ui.main.MainUiState
-import com.android.borsappc.ui.main.MainViewModel
+import com.android.borsappc.ui.screen.main.Drawer
+import com.android.borsappc.ui.screen.main.DrawerScreens
+import com.android.borsappc.ui.screen.main.MainUiState
+import com.android.borsappc.ui.screen.main.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,7 @@ fun DashboardScaffold(
 ) {
     BottomDrawer(
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             Drawer(
                 user = user,

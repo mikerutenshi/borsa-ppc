@@ -1,4 +1,4 @@
-package com.android.borsappc.ui.main
+package com.android.borsappc.ui.screen.main
 
 data class MainUiState(
     val currentScreen: String = DrawerScreens.Work.route,

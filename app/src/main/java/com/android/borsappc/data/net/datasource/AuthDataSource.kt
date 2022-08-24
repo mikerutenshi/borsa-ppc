@@ -9,6 +9,6 @@ import com.android.borsappc.data.net.response.GenericResponse
 interface AuthDataSource {
     suspend fun signIn(signIn: UserSignIn): GenericResponse<User>
     suspend fun register(user: User): GenericResponse<Unit>
-    fun refreshToken(refreshToken: UserRefreshToken): GenericResponse<UserAccessToken>
+    suspend fun refreshToken(refreshToken: UserRefreshToken): GenericResponse<UserAccessToken>
     suspend fun signOut(userName: String): GenericResponse<Unit>
 }

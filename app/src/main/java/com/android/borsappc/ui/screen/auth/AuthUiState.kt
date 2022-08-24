@@ -1,7 +1,6 @@
-package com.android.borsappc.ui.auth
+package com.android.borsappc.ui.screen.auth
 
 import com.android.borsappc.data.model.User
-import com.android.borsappc.ui.InputWrapper
 
 data class AuthUiState(
     var user: User? = null,

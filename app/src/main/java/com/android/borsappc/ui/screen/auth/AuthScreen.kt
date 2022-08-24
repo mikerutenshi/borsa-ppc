@@ -1,4 +1,4 @@
-package com.android.borsappc.ui.auth
+package com.android.borsappc.ui.screen.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,7 +36,7 @@ import com.android.borsappc.R
 import com.android.borsappc.toast
 import com.android.borsappc.ui.CustomTextField
 import com.android.borsappc.ui.White
-import com.android.borsappc.ui.main.MainScreen
+import com.android.borsappc.ui.screen.main.MainScreen
 import timber.log.Timber
 
 object AuthScreen : AndroidScreen() {
