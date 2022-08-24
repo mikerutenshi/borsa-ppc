@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -28,6 +29,9 @@ import com.android.borsappc.ui.Green
 import com.android.borsappc.ui.Orange
 import com.android.borsappc.ui.model.WorkStatus
 import com.android.borsappc.ui.model.WorkUiModel
+import com.android.borsappc.ui.screen.ErrorItem
+import com.android.borsappc.ui.screen.LoadingItem
+import com.android.borsappc.ui.screen.LoadingView
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -62,6 +66,35 @@ fun WorkList(works: Flow<PagingData<WorkUiModel>>) {
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         items(lazyWorkItems) { work ->
             WorkItem(work = work!!)
+        }
+
+        lazyWorkItems.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item { LoadingView(modifier = Modifier.fillParentMaxSize())}
+                }
+                loadState.append is LoadState.Loading -> {
+                    item { LoadingItem() }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    val e = lazyWorkItems.loadState.refresh as LoadState.Error
+                    item {
+                        ErrorItem(
+                            message = e.error.localizedMessage!!,
+                            modifier = Modifier.fillParentMaxSize(),
+                            onClickRetry = { retry() }
+                        )
+                    }
+                }loadState.append is LoadState.Error -> {
+                    val e = lazyWorkItems.loadState.append as LoadState.Error
+                    item {
+                        ErrorItem(
+                            message = e.error.localizedMessage!!,
+                            onClickRetry = { retry() }
+                        )
+                    }
+                }
+            }
         }
     }
 }

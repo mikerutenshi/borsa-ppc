@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -96,7 +96,7 @@ fun DashboardScaffold(
                         Icon(Icons.Filled.Search, contentDescription = "Localized description")
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.MoreVert, contentDescription = "Localized description")
+                        Icon(Icons.Filled.FilterAlt, contentDescription = "Localized description")
                     }
                 }
             }

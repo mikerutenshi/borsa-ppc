@@ -5,15 +5,6 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 
-object Position {
-    const val DRAWER = "drawer"
-    const val SEWER = "sewer"
-    const val ASSEMBLER = "assembler"
-    const val SOLE_STITCHER = "sole_stitcher"
-    const val LINING_DRAWER = "lining_drawer"
-    const val INSOLE_STITCHER = "insole_stitcher"
-}
-
 @Entity(tableName = "works")
 data class Work(
     @PrimaryKey
