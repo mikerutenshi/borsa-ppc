@@ -30,4 +30,9 @@
     <string name="status_assemble">Assemble</string>
     <string name="status_sole_stitch">Sole Stitch</string>
     <string name="status_insole_stitch">Insole Stitch</string>
+    <string name="role_superuser">Superuser</string>
+    <string name="role_admin_price">Finance Manager</string>
+    <string name="role_admin_work">Production Manager</string>
+    <string name="role_admin_qa">Quality Assurance</string>
+    <string name="see_you_later">See you later, %s ...</string>
 </resources>

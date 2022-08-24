@@ -13,9 +13,8 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.android.borsappc.R
+import com.android.borsappc.data.model.Role
 import com.android.borsappc.data.model.User
 import java.time.LocalTime
 
@@ -41,15 +40,22 @@ fun Drawer(modifier: Modifier = Modifier,
            uiState: MainUiState,
            onDestinationClicked: (route: String) -> Unit
     ) {
-    val navigator = LocalNavigator.currentOrThrow
+//    val navigator = LocalNavigator.currentOrThrow
+    val role = when (user.role) {
+        Role.SUPER_USER -> " / ${stringResource(id = R.string.role_superuser)}"
+        Role.ADMIN_PRICE -> " / ${stringResource(id = R.string.role_admin_price)}"
+        Role.ADMIN_WORK -> " / ${stringResource(id = R.string.role_admin_work)}"
+        Role.ADMIN_QA -> " / ${stringResource(id = R.string.role_admin_qa)}"
+        else -> ""
+    }
 
     Column(modifier = Modifier.padding(24.dp)) {
         if (uiState.isSigningOut) {
-            Text("Sampai ketemu lagi, ${user.username.capitalize(Locale.current)} ...",
-                style = typography.h4)
+            Text(stringResource(id = R.string.see_you_later, user.username.capitalize(Locale.current)),
+                style = typography.h5)
         } else {
             val currentTime = LocalTime.now()
-            val name = "${user.firstName} ${user.lastName ?: ""} (${user.role})"
+            val name = "${user.firstName} ${user.lastName ?: ""}$role"
             val greetings = when {
                 currentTime.isAfter(LocalTime.of(17, 59)) ->
                         stringResource(id = R.string.good_evening_user, name)
@@ -61,7 +67,7 @@ fun Drawer(modifier: Modifier = Modifier,
                 else -> stringResource(id = R.string.welcome_user, name)
             }
             Text(greetings,
-                style = typography.h4)
+                style = typography.h5)
         }
         Spacer(modifier = Modifier.height(24.dp))
         Divider()
@@ -76,8 +82,8 @@ fun Drawer(modifier: Modifier = Modifier,
                 style = typography.h6,
                 modifier = Modifier
                     .clickable {
-                    onDestinationClicked(screen.route)
-                }
+                        onDestinationClicked(screen.route)
+                    }
                     .fillMaxWidth()
                     .padding(top = 12.dp, bottom = 12.dp),
                 textAlign = TextAlign.Start

@@ -10,7 +10,7 @@ object Position {
     const val ALL = "all"
 }
 
-object Roles {
+object Role {
     const val ADMIN_QA = "admin_qa";
     const val ADMIN_WORK = "admin_work";
     const val ADMIN_PRICE = "admin_price";
