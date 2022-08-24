@@ -1,10 +1,7 @@
 package com.android.borsappc.ui.screen.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.typography
@@ -14,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -51,7 +49,7 @@ fun Drawer(modifier: Modifier = Modifier,
                 style = typography.h4)
         } else {
             val currentTime = LocalTime.now()
-            val name = "${user.firstName} ${user.lastName ?: ""}"
+            val name = "${user.firstName} ${user.lastName ?: ""} (${user.role})"
             val greetings = when {
                 currentTime.isAfter(LocalTime.of(17, 59)) ->
                         stringResource(id = R.string.good_evening_user, name)
@@ -71,14 +69,18 @@ fun Drawer(modifier: Modifier = Modifier,
             val textColor = if (screen.route == uiState.currentScreen) colors.primary else
                 colors.onPrimary
 
-            Spacer(modifier = Modifier.height(24.dp))
+//            Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = screen.title,
                 color = textColor,
                 style = typography.h6,
-                modifier = Modifier.clickable {
+                modifier = Modifier
+                    .clickable {
                     onDestinationClicked(screen.route)
                 }
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 12.dp),
+                textAlign = TextAlign.Start
             )
         }
     }
