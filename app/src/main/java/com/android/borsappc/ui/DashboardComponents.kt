@@ -14,10 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.android.borsappc.R
 import com.android.borsappc.data.model.User
-import com.android.borsappc.ui.screen.main.Drawer
-import com.android.borsappc.ui.screen.main.DrawerScreens
-import com.android.borsappc.ui.screen.main.MainUiState
-import com.android.borsappc.ui.screen.main.MainViewModel
+import com.android.borsappc.ui.screen.main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -28,6 +25,7 @@ fun DashboardScaffold(
     drawerState: BottomDrawerState,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
+    bottomSheetState: ModalBottomSheetState,
     user: User,
     uiState: MainUiState,
     scaffoldContent: @Composable (paddingValues: PaddingValues) -> Unit
@@ -52,56 +50,71 @@ fun DashboardScaffold(
             }
         }
     ) {
-        Scaffold(
-            modifier = Modifier,
-            scaffoldState = scaffoldState,
-            floatingActionButtonPosition = FabPosition.Center,
-            snackbarHost = {
-                SnackbarHost(it) { data ->
-                    Snackbar(
-                        backgroundColor = Red,
-                        snackbarData = data
-                    )
-                }
-            },
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { /* ... */ },
-                ) {
-                    /* FAB content */
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = stringResource(id = R.string.ic_desc_plus)
-                    )
-                }
-            },
-            // Defaults to false
-            isFloatingActionButtonDocked = true,
-            bottomBar = {
-                BottomAppBar {
-                    // Leading icons should typically have a high content alpha
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+        ModalBottomSheetLayout(sheetContent = { FilterBottomSheet() },
+            sheetState = bottomSheetState
+        ) {
+
+            Scaffold(
+                modifier = Modifier,
+                scaffoldState = scaffoldState,
+                floatingActionButtonPosition = FabPosition.Center,
+                snackbarHost = {
+                    SnackbarHost(it) { data ->
+                        Snackbar(
+                            backgroundColor = Red,
+                            snackbarData = data
+                        )
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { /* ... */ },
+                    ) {
+                        /* FAB content */
+                        Icon(
+                            Icons.Filled.Add,
+                            contentDescription = stringResource(id = R.string.ic_desc_plus)
+                        )
+                    }
+                },
+                // Defaults to false
+                isFloatingActionButtonDocked = true,
+                bottomBar = {
+                    BottomAppBar {
+                        // Leading icons should typically have a high content alpha
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }) {
+                                Icon(
+                                    Icons.Filled.Menu,
+                                    contentDescription = "Localized description"
+                                )
+                            }
+                        }
+                        // The actions should be at the end of the BottomAppBar. They use the default medium
+                        // content alpha provided by BottomAppBar
+                        Spacer(Modifier.weight(1f, true))
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(Icons.Filled.Search, contentDescription = "Localized description")
+                        }
                         IconButton(onClick = {
                             scope.launch {
-                                drawerState.open()
+                                bottomSheetState.show()
                             }
                         }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+                            Icon(
+                                Icons.Filled.FilterAlt,
+                                contentDescription = "Localized description"
+                            )
                         }
                     }
-                    // The actions should be at the end of the BottomAppBar. They use the default medium
-                    // content alpha provided by BottomAppBar
-                    Spacer(Modifier.weight(1f, true))
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.Search, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Filled.FilterAlt, contentDescription = "Localized description")
-                    }
                 }
+            ) { padding ->
+                scaffoldContent(padding)
             }
-        ) { padding ->
-            scaffoldContent(padding)
         }
     }
 }

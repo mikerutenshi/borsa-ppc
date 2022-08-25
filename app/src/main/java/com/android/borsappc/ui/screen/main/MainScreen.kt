@@ -42,6 +42,7 @@ fun MainScreenContent(viewModel: MainViewModel, user: User) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val scaffoldState = rememberScaffoldState()
     val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val events = remember { viewModel.events }
 
@@ -88,9 +89,10 @@ fun MainScreenContent(viewModel: MainViewModel, user: User) {
         scope = scope,
         scaffoldState = scaffoldState,
         user = user,
+        bottomSheetState = bottomSheetState,
         uiState = uiState
     ) {
-        Surface(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+        Surface(modifier = Modifier.padding(it)) {
             CurrentScreen()
         }
     }
