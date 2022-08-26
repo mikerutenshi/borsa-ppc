@@ -13,4 +13,7 @@ class WorkViewModel @Inject constructor(
     private val workRepository: WorkRepository
 ) : ViewModel() {
     val works = workRepository.getWorks(WorkQuery()).cachedIn(viewModelScope)
+
+    fun invalidateWorks() {
+    }
 }

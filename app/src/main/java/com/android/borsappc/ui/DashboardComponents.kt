@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.android.borsappc.R
@@ -30,6 +31,14 @@ fun DashboardScaffold(
     uiState: MainUiState,
     scaffoldContent: @Composable (paddingValues: PaddingValues) -> Unit
 ) {
+    if (bottomSheetState.currentValue != ModalBottomSheetValue.Hidden) {
+        DisposableEffect(key1 = Unit) {
+            onDispose {
+                //TODO
+            }
+        }
+    }
+
     BottomDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
@@ -50,7 +59,7 @@ fun DashboardScaffold(
             }
         }
     ) {
-        ModalBottomSheetLayout(sheetContent = { FilterBottomSheet() },
+        ModalBottomSheetLayout(sheetContent = { FilterBottomSheet(viewModel) },
             sheetState = bottomSheetState
         ) {
 

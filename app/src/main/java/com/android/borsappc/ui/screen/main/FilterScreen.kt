@@ -4,55 +4,162 @@ import android.app.DatePickerDialog
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SortByAlpha
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.borsappc.R
+import com.android.borsappc.data.model.API_DATE_FORMAT
+import com.android.borsappc.data.model.Sort
 import com.android.borsappc.ui.BorsaPpcTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-fun FilterBottomSheet() {
+fun FilterBottomSheet(viewModel: MainViewModel) {
 
-    val startDate = remember { mutableStateOf(LocalDate.now().minusWeeks(1)) }
-    val endDate = remember { mutableStateOf(LocalDate.now()) }
-    val startDatePicker = datePicker(startDate.value) {
-        startDate.value = it
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+//    val startDate = remember { mutableStateOf(LocalDate.now().minusWeeks(1)) }
+//    val endDate = remember { mutableStateOf(LocalDate.now()) }
+    val startDate = LocalDate
+        .parse(uiState.value.workQuery.startDate, DateTimeFormatter
+            .ofPattern(API_DATE_FORMAT))
+    val endDate = LocalDate
+        .parse(uiState.value.workQuery.endDate, DateTimeFormatter
+            .ofPattern(API_DATE_FORMAT))
+    val startDatePicker = datePicker(startDate) { selectedDate ->
+        viewModel.onEvent(MainUIEvent.StartDateChanged(selectedDate))
     }
-    val endDatePicker = datePicker(endDate.value) {
-        endDate.value = it
+    val endDatePicker = datePicker(endDate) { selectedDate ->
+        viewModel.onEvent(MainUIEvent.EndDateChanged(selectedDate))
     }
-    Column(modifier = Modifier.padding(24.dp)) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    var textFieldSize by remember { mutableStateOf(Size.Zero)}
+    val sortOptions = mapOf<String, String>(
+        Pair(Sort.BY_SPK_NO, stringResource(id = R.string.label_spk)),
+        Pair(Sort.BY_ARTICLE_NO, stringResource(id = R.string.label_article)),
+        Pair(Sort.BY_DATE, stringResource(id = R.string.label_date)),
+    )
+    val sortDirections = mapOf(
+        Pair(true, Sort.DIRECTION_DESC),
+        Pair(false, Sort.DIRECTION_ASC),
+    )
+//    var selectedSort by remember {
+//        mutableStateOf(sortOptions.getValue(Sort.BY_SPK_NO))
+//    }
+    var checked by remember {
+        mutableStateOf(false)
+    }
+//    var sortDirection by remember { mutableStateOf(sortDirections.getValue(false)) }
+//     val interactionSource = remember { MutableInteractionSource() }
+
+    Column(modifier = Modifier
+        .padding(24.dp)
+    ) {
         Text(text = "Filter")
         Spacer(modifier = Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-            OutlinedTextField(
-                value = startDate.value.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                , label = { Text(text = "Start Date") }
-                , onValueChange = {}
-                , enabled = false, modifier = Modifier.clickable { startDatePicker.show() }
-            )
-            OutlinedTextField(
-                value = endDate.value.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                , label = { Text(text = "End Date") }
-                , onValueChange = {}
-                , enabled = false, modifier = Modifier.clickable { endDatePicker.show() }
-            )
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+            Box(modifier = Modifier.weight(0.5f)) {
+                OutlinedTextField(
+                    value = uiState.value.workQuery.startDate
+                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)),
+                    label = { Text(text = "From") },
+                    onValueChange = {}
+                )
+
+                Box(modifier = Modifier
+                    .clickable {
+                        startDatePicker.show()
+                    }
+                    .matchParentSize())
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Box(modifier = Modifier.weight(0.5f)) {
+                OutlinedTextField(
+                    value = uiState.value.workQuery.endDate
+                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)),
+                    label = { Text(text = "Until") },
+                    onValueChange = {}
+                )
+                Box(modifier = Modifier
+                    .clickable {
+                        endDatePicker.show()
+                    }
+                    .matchParentSize())
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         Divider()
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Sort")
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column {
+                Box() {
+                    OutlinedTextField(
+                        value = sortOptions.getValue(uiState.value.workQuery.sortBy),
+                        label = { Text(text = "Sort by") },
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .onGloballyPositioned { layoutCoordinates ->
+                                textFieldSize = layoutCoordinates.size.toSize()
+                            }
+                    )
+                    Box(modifier = Modifier
+                        .clickable {
+                            expanded = !expanded
+                        }
+                        .matchParentSize())
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current){textFieldSize.width.toDp()})
+                ) {
+                    sortOptions.forEach { option ->
+                        DropdownMenuItem(onClick = {
+                            viewModel.onEvent(MainUIEvent.SortKeyChanged(option.key))
+                            expanded = false
+                        }) {
+                            Text(text = option.value)
+                        }
+                    }
+                }
+            }
+            IconToggleButton(checked = checked, onCheckedChange = {
+                checked = !checked
+                viewModel.onEvent(
+                    MainUIEvent.SortDirectionChanged(sortDirections.getValue(checked)))
+            }) {
+                Row() {
+                    Icon(imageVector = Icons.Filled.SortByAlpha,
+                        contentDescription = "Sort Alphabetically")
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(text = if (checked) "Desc" else "Asc")
+                }
+            }
+        }
     }
 }
 
@@ -67,7 +174,7 @@ fun datePicker(date: LocalDate, onDatePicked: (date: LocalDate) -> Unit): DatePi
         context, { _: android.widget.DatePicker, y: Int, M: Int, d: Int ->
             val chosenDate = LocalDate.of(y, M + 1, d)
             onDatePicked(chosenDate)
-        }, year, month, day
+        }, year, month - 1, day
     )
 }
 
@@ -75,7 +182,7 @@ fun datePicker(date: LocalDate, onDatePicked: (date: LocalDate) -> Unit): DatePi
 @Composable
 fun WorkItemPreview() {
     BorsaPpcTheme {
-        FilterBottomSheet()
+//        FilterBottomSheet()
     }
 }
 //@Composable

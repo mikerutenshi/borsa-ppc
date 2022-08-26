@@ -18,15 +18,15 @@ object Role {
 }
 
 object Sort {
-    const val SORT_DIRECTION_ASC = "asc";
-    const val SORT_DIRECTION_DESC = "desc";
-    const val SORT_BY_WORKER_NAME = "name";
-    const val SORT_BY_WORKER_POSITION = "position";
-    const val SORT_BY_SPK_NO = "spk_no";
-    const val SORT_BY_ARTICLE_NO = "article_no";
-    const val SORT_BY_DATE = "created_at";
-    const val SORT_BY_DONE_AT = "done_at";
-    const val SORT_BY_ASSIGNED_AT = "assigned_at";
+    const val DIRECTION_ASC = "asc";
+    const val DIRECTION_DESC = "desc";
+    const val BY_WORKER_NAME = "name";
+    const val BY_WORKER_POSITION = "position";
+    const val BY_SPK_NO = "spk_no";
+    const val BY_ARTICLE_NO = "article_no";
+    const val BY_DATE = "created_at";
+    const val BY_DONE_AT = "done_at";
+    const val BY_ASSIGNED_AT = "assigned_at";
 }
 
 object Filter {
@@ -34,3 +34,5 @@ object Filter {
     const val BY_DONE_AT = "done_at";
     const val BY_ASSIGNED_AT = "assigned_at";
 }
+
+const val API_DATE_FORMAT = "yyyy-MM-dd"

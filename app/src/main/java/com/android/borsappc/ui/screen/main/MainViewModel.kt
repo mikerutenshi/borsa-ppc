@@ -2,10 +2,12 @@ package com.android.borsappc.ui.screen.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.borsappc.data.model.API_DATE_FORMAT
 import com.android.borsappc.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter.ofPattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +20,45 @@ class MainViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000L), MainUiState())
     val events = _events.shareIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000L))
+
+    fun onEvent(event: MainUIEvent) {
+        when (event) {
+            is MainUIEvent.StartDateChanged -> {
+                val date = event.date.format(ofPattern(API_DATE_FORMAT))
+                _uiState.update {
+                    it.copy(
+                        workQuery =
+                        it.workQuery.copy(startDate = date)
+                    )
+                }
+            }
+            is MainUIEvent.EndDateChanged -> {
+                val date = event.date.format(ofPattern(API_DATE_FORMAT))
+                _uiState.update {
+                    it.copy(
+                        workQuery =
+                        it.workQuery.copy(endDate = date)
+                    )
+                }
+            }
+            is MainUIEvent.SortKeyChanged -> {
+                _uiState.update {
+                    it.copy(
+                        workQuery =
+                        it.workQuery.copy(sortBy = event.key)
+                    )
+                }
+            }
+            is MainUIEvent.SortDirectionChanged -> {
+                _uiState.update {
+                    it.copy(
+                        workQuery =
+                        it.workQuery.copy(sortDirection = event.direction)
+                    )
+                }
+            }
+        }
+    }
 
     fun setCurrentScreen(route: String) {
         _uiState.update {
