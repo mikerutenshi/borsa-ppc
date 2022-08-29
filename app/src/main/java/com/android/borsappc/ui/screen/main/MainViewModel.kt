@@ -3,7 +3,9 @@ package com.android.borsappc.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.borsappc.data.model.API_DATE_FORMAT
+import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.AuthRepository
+import com.android.borsappc.data.repository.WorkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -12,14 +14,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-   private val authRepository: AuthRepository) : ViewModel() {
+    private val authRepository: AuthRepository,
+    private val workRepository: WorkRepository
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainUiState())
+    private val _uiState: MutableStateFlow<MainUiState> = MutableStateFlow(MainUiState())
     private val _events = MutableSharedFlow<MainScreenEvent>()
     val uiState = _uiState.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000L), MainUiState())
     val events = _events.shareIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000L))
+
+    init {
+        initUIState()
+    }
+
+    fun initUIState() {
+        viewModelScope.launch {
+            workRepository.getWorkFilterData().collectLatest {
+                val initialState = MainUiState(workQuery = WorkQuery(
+                    startDate = it.date.startDate,
+                    endDate = it.date.endDate,
+                    sortBy = it.sort.sortBy,
+                    sortDirection = it.sort.sortDirection,
+                )
+                )
+                _uiState.update { initialState }
+            }
+        }
+    }
 
     fun onEvent(event: MainUIEvent) {
         when (event) {
@@ -55,6 +78,11 @@ class MainViewModel @Inject constructor(
                         workQuery =
                         it.workQuery.copy(sortDirection = event.direction)
                     )
+                }
+            }
+            MainUIEvent.FilterScreenClosed -> {
+                viewModelScope.launch {
+                    workRepository.storeWorkFilterData(_uiState.value.workQuery)
                 }
             }
         }

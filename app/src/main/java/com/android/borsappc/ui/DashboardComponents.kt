@@ -34,7 +34,7 @@ fun DashboardScaffold(
     if (bottomSheetState.currentValue != ModalBottomSheetValue.Hidden) {
         DisposableEffect(key1 = Unit) {
             onDispose {
-                //TODO
+                viewModel.onEvent(MainUIEvent.FilterScreenClosed)
             }
         }
     }

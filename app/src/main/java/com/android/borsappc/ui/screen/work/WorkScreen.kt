@@ -65,7 +65,9 @@ fun WorkList(works: Flow<PagingData<WorkUiModel>>) {
     
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         items(lazyWorkItems) { work ->
-            WorkItem(work = work!!)
+            work?.let {
+                WorkItem(work = work)
+            } //TODO SHow Error
         }
 
         lazyWorkItems.apply {

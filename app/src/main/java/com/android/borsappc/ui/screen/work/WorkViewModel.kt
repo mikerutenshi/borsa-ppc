@@ -6,14 +6,23 @@ import androidx.paging.cachedIn
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.WorkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkViewModel @Inject constructor(
     private val workRepository: WorkRepository
 ) : ViewModel() {
-    val works = workRepository.getWorks(WorkQuery()).cachedIn(viewModelScope)
-
-    fun invalidateWorks() {
+    private val queryFlow = workRepository.getWorkFilterData()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val works = queryFlow.flatMapLatest {
+        val workQuery = WorkQuery(
+            startDate = it.date.startDate,
+            endDate = it.date.endDate,
+            sortBy = it.sort.sortBy,
+            sortDirection = it.sort.sortDirection
+        )
+        workRepository.getWorks(workQuery).cachedIn(viewModelScope)
     }
 }

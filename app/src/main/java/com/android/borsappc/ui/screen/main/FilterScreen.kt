@@ -57,15 +57,15 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
         Pair(Sort.BY_DATE, stringResource(id = R.string.label_date)),
     )
     val sortDirections = mapOf(
-        Pair(true, Sort.DIRECTION_DESC),
-        Pair(false, Sort.DIRECTION_ASC),
+        Pair(Sort.DIRECTION_DESC, true),
+        Pair(Sort.DIRECTION_ASC, false),
     )
 //    var selectedSort by remember {
 //        mutableStateOf(sortOptions.getValue(Sort.BY_SPK_NO))
 //    }
-    var checked by remember {
-        mutableStateOf(false)
-    }
+//    var checked by remember {
+//        mutableStateOf(false)
+//    }
 //    var sortDirection by remember { mutableStateOf(sortDirections.getValue(false)) }
 //     val interactionSource = remember { MutableInteractionSource() }
 
@@ -147,16 +147,18 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
                     }
                 }
             }
-            IconToggleButton(checked = checked, onCheckedChange = {
-                checked = !checked
-                viewModel.onEvent(
-                    MainUIEvent.SortDirectionChanged(sortDirections.getValue(checked)))
+            IconToggleButton(
+                checked = sortDirections.getValue(uiState.value.workQuery.sortDirection),
+                onCheckedChange = { isChecked ->
+                    val sortDirection = if (isChecked) Sort.DIRECTION_DESC else Sort.DIRECTION_ASC
+                    viewModel.onEvent(
+                        MainUIEvent.SortDirectionChanged(sortDirection))
             }) {
                 Row() {
                     Icon(imageVector = Icons.Filled.SortByAlpha,
                         contentDescription = "Sort Alphabetically")
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = if (checked) "Desc" else "Asc")
+                    Text(text = if (uiState.value.workQuery.sortDirection == Sort.DIRECTION_DESC) "Desc" else "Asc")
                 }
             }
         }

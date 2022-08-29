@@ -1,22 +1,29 @@
 package com.android.borsappc.data.repository
 
+import androidx.datastore.core.DataStore
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
+import com.android.borsappc.Date
+import com.android.borsappc.Sort
+import com.android.borsappc.UserPreferences
+import com.android.borsappc.WorkFilterPrefs
 import com.android.borsappc.data.db.AppDatabase
 import com.android.borsappc.data.model.Position
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.di.RetrofitWithAuth
 import com.android.borsappc.ui.model.WorkStatus
 import com.android.borsappc.ui.model.WorkUiModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.Retrofit
 import javax.inject.Inject
 
 class WorkRepository @Inject constructor(
     private val database: AppDatabase,
-    @RetrofitWithAuth private val retrofit: Retrofit
+    @RetrofitWithAuth private val retrofit: Retrofit,
+    private val userPrefs: DataStore<UserPreferences>
 ) {
     @OptIn(ExperimentalPagingApi::class)
     fun getWorks(query: WorkQuery) = Pager(
@@ -78,6 +85,31 @@ class WorkRepository @Inject constructor(
                 updatedAt = work.updatedAt,
                 notes = work.notes
             )
+        }
+    }
+
+    fun getWorkFilterData(): Flow<WorkFilterPrefs> {
+         return userPrefs.data.map { prefs ->
+             prefs.workFilterPrefs
+         }
+    }
+
+    suspend fun storeWorkFilterData(workQuery: WorkQuery) {
+        userPrefs.updateData { prefs ->
+            prefs.toBuilder()
+                .setWorkFilterPrefs(
+                    prefs.workFilterPrefs.toBuilder()
+                        .setDate(Date.newBuilder()
+                            .setStartDate(workQuery.startDate)
+                            .setEndDate(workQuery.endDate)
+                            .build())
+                        .setSort(Sort.newBuilder()
+                            .setSortBy(workQuery.sortBy)
+                            .setSortDirection(workQuery.sortDirection)
+                            .build())
+                        .build()
+                )
+                .build()
         }
     }
 }

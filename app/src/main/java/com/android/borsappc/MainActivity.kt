@@ -1,11 +1,12 @@
 package com.android.borsappc
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.Navigator
 import com.android.borsappc.data.repository.AuthRepository
+import com.android.borsappc.data.repository.WorkRepository
 import com.android.borsappc.ui.BorsaPpcTheme
 import com.android.borsappc.ui.screen.auth.AuthScreen
 import com.android.borsappc.ui.screen.main.MainScreen
@@ -15,9 +16,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     @Inject lateinit var authRepository: AuthRepository
+    @Inject lateinit var workRepository: WorkRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
