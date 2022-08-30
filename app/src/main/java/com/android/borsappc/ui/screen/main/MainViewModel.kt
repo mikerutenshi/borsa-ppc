@@ -49,6 +49,7 @@ class MainViewModel @Inject constructor(
                     sortDirection = it.sort.sortDirection.ifEmpty { Sort.DIRECTION_ASC }
                 ))
                 _uiState.update { initialState }
+                workRepository.storeWorkFilterData(initialState.workQuery)
             }
         }
     }
