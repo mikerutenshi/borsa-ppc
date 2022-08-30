@@ -34,7 +34,11 @@ class WorkRepository @Inject constructor(
             retrofit
         )
     ) {
-        database.workDao().pagingSource()
+//        if (query.sortDirection == "asc") {
+//            database.workDao().pagingSourceAsc(apiToRoomSortKey(query.sortBy))
+//        } else  {
+            database.workDao().getPagingSource(query)
+//        }
     }.flow.map { pagingData ->
         pagingData.map { work ->
             var drawStatus = WorkStatus.AVAILABLE
@@ -103,13 +107,15 @@ class WorkRepository @Inject constructor(
                             .setStartDate(workQuery.startDate)
                             .setEndDate(workQuery.endDate)
                             .build())
-                        .setSort(Sort.newBuilder()
+                        .setSort(
+                            Sort.newBuilder()
                             .setSortBy(workQuery.sortBy)
                             .setSortDirection(workQuery.sortDirection)
                             .build())
                         .build()
                 )
                 .build()
+
         }
     }
 }

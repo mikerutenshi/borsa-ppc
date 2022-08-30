@@ -3,12 +3,14 @@ package com.android.borsappc.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.borsappc.data.model.API_DATE_FORMAT
+import com.android.borsappc.data.model.Sort
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.data.repository.WorkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 import javax.inject.Inject
 
@@ -33,12 +35,19 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             workRepository.getWorkFilterData().collectLatest {
                 val initialState = MainUiState(workQuery = WorkQuery(
-                    startDate = it.date.startDate,
-                    endDate = it.date.endDate,
-                    sortBy = it.sort.sortBy,
-                    sortDirection = it.sort.sortDirection,
-                )
-                )
+                    startDate = it.date.startDate.ifEmpty {
+                        LocalDate.now().minusWeeks(1L).format(
+                            ofPattern(API_DATE_FORMAT)
+                        )
+                    },
+                    endDate = it.date.endDate.ifEmpty {
+                        LocalDate.now().format(
+                            ofPattern(API_DATE_FORMAT)
+                        )
+                    },
+                    sortBy = it.sort.sortBy.ifEmpty { Sort.BY_SPK_NO },
+                    sortDirection = it.sort.sortDirection.ifEmpty { Sort.DIRECTION_ASC }
+                ))
                 _uiState.update { initialState }
             }
         }
