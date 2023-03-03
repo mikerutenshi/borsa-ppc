@@ -62,13 +62,19 @@ class WorkRepository @Inject constructor(
             }
 
             for (wd in work.workDone) {
-                when (wd.position) {
-                    Position.DRAWER -> drawStatus = WorkStatus.COMPLETED
-                    Position.LINING_DRAWER -> liningDrawStatus = WorkStatus.COMPLETED
-                    Position.SEWER -> sewStatus = WorkStatus.COMPLETED
-                    Position.ASSEMBLER -> assembleStatus = WorkStatus.COMPLETED
-                    Position.SOLE_STITCHER -> soleStitchStatus = WorkStatus.COMPLETED
-                    Position.INSOLE_STITCHER -> insoleStitchStatus = WorkStatus.COMPLETED
+                when  {
+                    wd.position == Position.DRAWER && wd.doneQuantity == work.quantity ->
+                        drawStatus = WorkStatus.COMPLETED
+                    wd.position == Position.LINING_DRAWER && wd.doneQuantity == work.quantity ->
+                        liningDrawStatus = WorkStatus.COMPLETED
+                    wd.position == Position.SEWER && wd.doneQuantity == work.quantity ->
+                        sewStatus = WorkStatus.COMPLETED
+                    wd.position == Position.ASSEMBLER && wd.doneQuantity == work.quantity ->
+                        assembleStatus = WorkStatus.COMPLETED
+                    wd.position == Position.SOLE_STITCHER && wd.doneQuantity == work.quantity ->
+                        soleStitchStatus = WorkStatus.COMPLETED
+                    wd.position == Position.INSOLE_STITCHER && wd.doneQuantity == work.quantity ->
+                        insoleStitchStatus = WorkStatus.COMPLETED
                 }
             }
 

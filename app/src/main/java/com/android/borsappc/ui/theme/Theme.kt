@@ -31,6 +31,21 @@ private val DraculaColorPalette = darkColors(
     onBackground = White
 )
 
+private val DraculaLightColorPalette = lightColors(
+    primary = Cyan,
+    primaryVariant = Purple,
+    secondary = Orange,
+    secondaryVariant = Yellow,
+    background = Color.White,
+    surface = White,
+    error = Red,
+    onPrimary = DarkGray,
+    onSecondary = DarkGray,
+    onError = DarkGray,
+    onSurface = DarkGray,
+    onBackground = DarkGray
+)
+
 private val LightColorPalette = lightColors()
 
 @Composable
@@ -41,7 +56,7 @@ fun BorsaPpcTheme(
     var colors = if (darkTheme) {
         DraculaColorPalette
     } else {
-        LightColorPalette
+        DraculaLightColorPalette
     }
 
     MaterialTheme(colors = colors,
