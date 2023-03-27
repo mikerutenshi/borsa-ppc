@@ -88,7 +88,8 @@ fun WorkList(works: Flow<PagingData<WorkUiModel>>) {
                             onClickRetry = { retry() }
                         )
                     }
-                }loadState.append is LoadState.Error -> {
+                }
+                loadState.append is LoadState.Error -> {
                     val e = lazyWorkItems.loadState.append as LoadState.Error
                     item {
                         ErrorItem(

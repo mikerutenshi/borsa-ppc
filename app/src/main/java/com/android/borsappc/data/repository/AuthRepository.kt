@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.model.User
 import com.android.borsappc.data.model.UserSignIn
-import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
+import com.android.borsappc.data.repository.datasource.AuthRemoteDataSource
 import com.android.borsappc.resultOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -26,6 +26,13 @@ class AuthRepository @Inject constructor(
 //            emit(data)
 //        }.flowOn(Dispatchers.IO)
 //    }
+
+    suspend fun signIn(signIn: UserSignIn): Result<User> =
+        resultOf {
+            withContext(Dispatchers.IO) {
+                authRemoteDataSource.signIn(signIn).data
+            }
+        }
 
     suspend fun storeSignInData(user: User): Result<Unit> {
 
@@ -77,13 +84,6 @@ class AuthRepository @Inject constructor(
             }
         }
     }
-
-    suspend fun signIn(signIn: UserSignIn): Result<User> =
-        resultOf {
-            withContext(Dispatchers.IO) {
-                authRemoteDataSource.signIn(signIn).data
-            }
-        }
 
     suspend fun signOut(username: String): Result<Unit> =
         resultOf {

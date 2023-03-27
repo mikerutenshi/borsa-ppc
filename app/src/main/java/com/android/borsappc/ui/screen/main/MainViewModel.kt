@@ -3,7 +3,7 @@ package com.android.borsappc.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.borsappc.data.model.API_DATE_FORMAT
-import com.android.borsappc.data.model.Sort
+import com.android.borsappc.data.model.Order
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.data.repository.WorkRepository
@@ -45,8 +45,8 @@ class MainViewModel @Inject constructor(
                             ofPattern(API_DATE_FORMAT)
                         )
                     },
-                    sortBy = it.sort.sortBy.ifEmpty { Sort.BY_SPK_NO },
-                    sortDirection = it.sort.sortDirection.ifEmpty { Sort.DIRECTION_ASC }
+                    sortBy = it.sort.sortBy.ifEmpty { Order.BY_SPK_NO },
+                    sortDirection = it.sort.sortDirection.ifEmpty { Order.DIRECTION_ASC }
                 ))
                 _uiState.update { initialState }
                 workRepository.storeWorkFilterData(initialState.workQuery)

@@ -1,4 +1,4 @@
-package com.android.borsappc.data.repository
+package com.android.borsappc.data.repository.mediator
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -27,18 +27,18 @@ class WorkRemoteMediator constructor(
     private val workDao = database.workDao()
     private val remoteKeyDao = database.remoteKeyDao()
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, Work>): RemoteMediator.MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, Work>): MediatorResult {
         return try {
-            val loadKey = when (loadType) {
+            val loadKey = when (/**/loadType) {
                 LoadType.REFRESH -> 1
-                LoadType.PREPEND -> return RemoteMediator.MediatorResult.Success(true)
+                LoadType.PREPEND -> return MediatorResult.Success(true)
                 LoadType.APPEND -> {
                     val remoteKey = database.withTransaction {
                         remoteKeyDao.remoteKeyByQuery(WORK_REMOTE_KEY_QUERY)
                     }
 
                     if (remoteKey.nextKey == null) {
-                        return RemoteMediator.MediatorResult.Success(true)
+                        return MediatorResult.Success(true)
                     }
 
                     remoteKey.nextKey
@@ -50,7 +50,7 @@ class WorkRemoteMediator constructor(
                 query.limit,
                 query.startDate,
                 query.endDate,
-                query.sortBy,
+                query.sortBy.second,
                 query.sortDirection
             )
             val nextKey = if (response.meta.totalPage == loadKey) null else loadKey.plus(1)
@@ -66,10 +66,11 @@ class WorkRemoteMediator constructor(
                     nextKey
                 ))
                 workDao.insertAll(response.data)
-                MediatorResult.Success(
-                    endOfPaginationReached = nextKey == null
-                )
             }
+
+            MediatorResult.Success(
+                endOfPaginationReached = nextKey == null
+            )
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {

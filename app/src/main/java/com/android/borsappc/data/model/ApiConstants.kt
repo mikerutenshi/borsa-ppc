@@ -17,16 +17,18 @@ object Role {
     const val SUPER_USER = "super_user";
 }
 
-object Sort {
+object Order {
     const val DIRECTION_ASC = "asc";
     const val DIRECTION_DESC = "desc";
-    const val BY_WORKER_NAME = "name";
-    const val BY_WORKER_POSITION = "position";
-    const val BY_SPK_NO = "spk_no";
-    const val BY_ARTICLE_NO = "article_no";
-    const val BY_DATE = "created_at";
-    const val BY_DONE_AT = "done_at";
-    const val BY_ASSIGNED_AT = "assigned_at";
+    const val BY_WORKER_NAME = Pair("name", "name")
+    const val BY_WORKER_POSITION = Pair("position", "position")
+    const val BY_SPK_NO = Pair("spk_no", "spkNo")
+    const val BY_ARTICLE_NO = Pair("article_no", "articleNo")
+    const val By_CREATED_AT = Pair("created_at", "createdAt")
+    const val By_CODE = Pair("code", "code")
+    const val By_NAME = Pair("name", "name")
+    const val BY_DONE_AT = Pair("done_at", "doneAt")
+    const val BY_ASSIGNED_AT = Pair("assigned_at", "assignedAt")
 }
 
 object Filter {

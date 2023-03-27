@@ -13,5 +13,6 @@ import com.android.borsappc.data.model.Work
 @TypeConverters(DataConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun workDao(): WorkDao
+    abstract fun productDao(): ProductDao
     abstract fun remoteKeyDao(): RemoteKeyDao
 }

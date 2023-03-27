@@ -35,4 +35,7 @@
     <string name="role_admin_work">Production Manager</string>
     <string name="role_admin_qa">Quality Assurance</string>
     <string name="see_you_later">See you later, %s ...</string>
+    <string name="label_code">Code</string>
+    <string name="label_name">Name</string>
+    <string name="label_subcat">Sub-Category</string>
 </resources>

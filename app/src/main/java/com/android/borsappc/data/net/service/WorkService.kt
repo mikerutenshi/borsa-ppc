@@ -1,7 +1,7 @@
 package com.android.borsappc.data.net.service
 
 import com.android.borsappc.data.model.Work
-import com.android.borsappc.data.net.response.GenericResponse
+import com.android.borsappc.data.model.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface WorkService {
     @POST("v1/works")
-    suspend fun storeWork(@Body work: Work): GenericResponse<Unit>
+    suspend fun storeWork(@Body work: Work): ResponseBody<Unit>
 
     @GET("v1-1/works")
     suspend fun getWorks(
@@ -20,7 +20,7 @@ interface WorkService {
         @Query("end_date") endDate: String,
         @Query("sort_by") sortBy: String,
         @Query("sort_direction") sortDirection: String
-    ): GenericResponse<List<Work>>
+    ): ResponseBody<List<Work>>
 
 //    @GET("v1-1/works/{id}/assigned-work")
 //    fun getWorkDetailAssigned(

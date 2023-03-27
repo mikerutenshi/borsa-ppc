@@ -6,7 +6,7 @@ import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.net.ErrorInterceptor
 import com.android.borsappc.data.net.RefreshTokenAuthenticator
 import com.android.borsappc.data.net.TokenInterceptor
-import com.android.borsappc.data.net.datasource.AuthRemoteDataSource
+import com.android.borsappc.data.repository.datasource.AuthRemoteDataSource
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
