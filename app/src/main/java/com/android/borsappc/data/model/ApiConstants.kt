@@ -20,15 +20,15 @@ object Role {
 object Order {
     const val DIRECTION_ASC = "asc";
     const val DIRECTION_DESC = "desc";
-    const val BY_WORKER_NAME = Pair("name", "name")
-    const val BY_WORKER_POSITION = Pair("position", "position")
-    const val BY_SPK_NO = Pair("spk_no", "spkNo")
-    const val BY_ARTICLE_NO = Pair("article_no", "articleNo")
-    const val By_CREATED_AT = Pair("created_at", "createdAt")
-    const val By_CODE = Pair("code", "code")
-    const val By_NAME = Pair("name", "name")
-    const val BY_DONE_AT = Pair("done_at", "doneAt")
-    const val BY_ASSIGNED_AT = Pair("assigned_at", "assignedAt")
+    val BY_WORKER_NAME = Pair("name", "name")
+    val BY_WORKER_POSITION = Pair("position", "position")
+    val BY_SPK_NO = Pair("spk_no", "spkNo")
+    val BY_ARTICLE_NO = Pair("article_no", "articleNo")
+    val By_CREATED_AT = Pair("created_at", "createdAt")
+    val By_CODE = Pair("code", "code")
+    val By_NAME = Pair("name", "name")
+    val BY_DONE_AT = Pair("done_at", "doneAt")
+    val BY_ASSIGNED_AT = Pair("assigned_at", "assignedAt")
 }
 
 object Filter {
@@ -38,3 +38,4 @@ object Filter {
 }
 
 const val API_DATE_FORMAT = "yyyy-MM-dd"
+const val HEADER_PAGE_NEXT_KEY = "Page Next Key"

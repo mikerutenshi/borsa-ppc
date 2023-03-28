@@ -2,30 +2,31 @@ package com.android.borsappc.data.repository.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.android.borsappc.data.model.HEADER_PAGE_NEXT_KEY
+import com.android.borsappc.data.model.Order
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList
 import com.android.borsappc.data.net.service.ProductService
-import com.android.borsappc.di.RetrofitWithoutAuth
-import com.android.borsappc.ui.screen.main.DrawerScreens
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.IOException
-import javax.inject.Inject
 
-class ProductPagingSource  (private val retrofit: Retrofit) : PagingSource<String, ProductListItem>() {
-    val query = QueryProductList()
-    override suspend fun load(params: LoadParams<String>): PagingSource.LoadResult<String, ProductListItem> {
+class ProductPagingSource  (private val queries: QueryProductList, private val retrofit: Retrofit) : PagingSource<String, ProductListItem>() {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, ProductListItem> {
         val index = params.key
         return try {
             val response = retrofit.create(ProductService::class.java).getProducts(
-                query.search,
+                queries.gender,
+                queries.subCategory,
+                queries.searchKey,
                 index,
-                query.limit,
-                query.order,
-                query.direction
+                queries.limit,
+                queries.orderBy.first,
+                queries.orderDirection
             )
 
-            LoadResult.Page(response.data, null, null)
+            val nextKey = response.headers()[HEADER_PAGE_NEXT_KEY]
+            LoadResult.Page(response.body()!!.data, null, nextKey)
         }
         catch (e: IOException) {
             // IOException for network failures.
@@ -38,9 +39,19 @@ class ProductPagingSource  (private val retrofit: Retrofit) : PagingSource<Strin
     }
 
     override fun getRefreshKey(state: PagingState<String, ProductListItem>): String? {
+        var refreshKey: String? = null
         state.anchorPosition?.let { anchorPos ->
-            val anchorIndex = state.closestItemToPosition(anchorPos)
-            return anchorIndex.code
+            state.closestItemToPosition(anchorPos)?.let {
+                refreshKey = when (queries.orderBy) {
+                    Order.By_CREATED_AT -> it.createdAt
+                    Order.By_CODE -> it.code
+                    Order.By_NAME -> it.name
+                    else -> {
+                        it.createdAt
+                    }
+                }
+            }
         }
+        return refreshKey
     }
 }

@@ -1,6 +1,11 @@
 package com.android.borsappc.data.model
 
 data class QueryProductList(
-    var gender: String? = "Female",
-    var subCategory: String? = "Mid-cut Boot",
-) : Query()
+    var gender: String?,
+    var subCategory: String?,
+    override var limit: Int,
+    override var index: String?,
+    override var orderBy: Pair<String, String>,
+    override var orderDirection : String,
+    override var searchKey : String?
+) : Query
