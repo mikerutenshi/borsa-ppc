@@ -52,9 +52,9 @@ class ProductLocalDataSource @Inject constructor(
                 }
             }
         }
-        products.removeLast()
+        products.dropLast(1)
 
-        return PagedList(products, nextKey)
+        return PagedList(ArrayList(products), nextKey)
     }
 
     override fun getProductListPrefs(): Flow<ProductListPrefs> {

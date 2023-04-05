@@ -7,10 +7,10 @@ import com.android.borsappc.data.model.ProductListItem
 @Dao
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     suspend fun insertAll(items: ArrayList<ProductListItem>)
+     suspend fun insertAll(items: List<ProductListItem>)
 
     @RawQuery(observedEntities = [ProductListItem::class])
-     fun getProducts(querySql: SimpleSQLiteQuery): ArrayList< ProductListItem>
+     fun getProducts(querySql: SimpleSQLiteQuery): List< ProductListItem>
 
     @Query("DELETE FROM products")
      suspend fun clearAll()

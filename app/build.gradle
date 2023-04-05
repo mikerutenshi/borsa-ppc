@@ -95,7 +95,7 @@ android {
     namespace 'com.android.borsappc'
 }
 
-private Integer generateVersionCode() {
+private Integer /**/generateVersionCode() {
 	return versionMajor * 10000 + versionMinor * 100 + versionPatch
 }
 
