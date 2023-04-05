@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
     }
 
     // "fix" android Q activity leak on back-pressed
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (onBackPressedDispatcher.hasEnabledCallbacks()) {
             super.onBackPressed()

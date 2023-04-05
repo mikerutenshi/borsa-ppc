@@ -50,10 +50,10 @@ class WorkRemoteMediator constructor(
                 query.limit,
                 query.startDate,
                 query.endDate,
-                query.sortBy.second,
-                query.sortDirection
+                query.orderBy,
+                query.orderDirection
             )
-            val nextKey = if (response.meta.totalPage == loadKey) null else loadKey.plus(1)
+            val nextKey = if (response.meta!!.totalPage == loadKey) null else loadKey.plus(1)
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {

@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.android.borsappc.data.model.Order
+import com.android.borsappc.data.model.Filter
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList
 import com.android.borsappc.data.repository.datasource.ProductLocalDataSource
@@ -31,9 +31,9 @@ class ProductListRemoteMediator(
                     val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(true)
 
                     when (queries.orderBy) {
-                        Order.By_CREATED_AT -> lastItem.createdAt
-                        Order.By_CODE -> lastItem.code
-                        Order.By_NAME -> lastItem.name
+                        Filter.BY_CREATED_AT -> lastItem.createdAt
+                        Filter.BY_CODE -> lastItem.code
+                        Filter.BY_NAME -> lastItem.name
                         else -> {
                             lastItem.createdAt
                         }

@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import com.android.borsappc.Date
-import com.android.borsappc.Sort
+import com.android.borsappc.Order
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.WorkFilterPrefs
 import com.android.borsappc.data.db.AppDatabase
@@ -114,11 +114,11 @@ class WorkRepository @Inject constructor(
                             .setStartDate(workQuery.startDate)
                             .setEndDate(workQuery.endDate)
                             .build())
-                        .setSort(
-                            Sort.newBuilder()
-                            .setSortBy(workQuery.sortBy)
-                            .setSortDirection(workQuery.sortDirection)
-                            .build())
+                        .setOrder(
+                            Order.newBuilder()
+                                .setOrderByRemote(workQuery.orderBy)
+                                .setOrderDirection(workQuery.orderDirection)
+                                .build())
                         .build()
                 )
                 .build()

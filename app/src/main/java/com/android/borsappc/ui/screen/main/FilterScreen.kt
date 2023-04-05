@@ -18,17 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.borsappc.R
 import com.android.borsappc.data.model.API_DATE_FORMAT
-import com.android.borsappc.data.model.Order
+import com.android.borsappc.data.model.Filter
 import com.android.borsappc.ui.BorsaPpcTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun FilterBottomSheet(viewModel: MainViewModel) {
 
@@ -51,14 +49,14 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
         mutableStateOf(false)
     }
     var textFieldSize by remember { mutableStateOf(Size.Zero)}
-    val sortOptions = mapOf<String, String>(
-        Pair(Order.BY_SPK_NO, stringResource(id = R.string.label_spk)),
-        Pair(Order.BY_ARTICLE_NO, stringResource(id = R.string.label_article)),
-        Pair(Order.By_CREATED_AT, stringResource(id = R.string.label_date)),
+    val sortOptions = mapOf(
+        Pair(Filter.BY_SPK_NO, stringResource(id = R.string.label_spk)),
+        Pair(Filter.BY_ARTICLE_NO, stringResource(id = R.string.label_article)),
+        Pair(Filter.BY_CREATED_AT, stringResource(id = R.string.label_date)),
     )
     val sortDirections = mapOf(
-        Pair(Order.DIRECTION_DESC, true),
-        Pair(Order.DIRECTION_ASC, false),
+        Pair(Filter.DIRECTION_DESC, true),
+        Pair(Filter.DIRECTION_ASC, false),
     )
 //    var selectedSort by remember {
 //        mutableStateOf(sortOptions.getValue(Sort.BY_SPK_NO))
@@ -114,9 +112,9 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Column {
-                Box() {
+                Box {
                     OutlinedTextField(
-                        value = sortOptions.getValue(uiState.value.workQuery.sortBy),
+                        value = sortOptions.getValue(uiState.value.workQuery.orderBy),
                         label = { Text(text = "Sort by") },
                         onValueChange = {},
                         modifier = Modifier
@@ -148,17 +146,17 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
                 }
             }
             IconToggleButton(
-                checked = sortDirections.getValue(uiState.value.workQuery.sortDirection),
+                checked = sortDirections.getValue(uiState.value.workQuery.orderDirection),
                 onCheckedChange = { isChecked ->
-                    val sortDirection = if (isChecked) Order.DIRECTION_DESC else Order.DIRECTION_ASC
+                    val sortDirection = if (isChecked) Filter.DIRECTION_DESC else Filter.DIRECTION_ASC
                     viewModel.onEvent(
                         MainUIEvent.SortDirectionChanged(sortDirection))
             }) {
-                Row() {
+                Row {
                     Icon(imageVector = Icons.Filled.SortByAlpha,
                         contentDescription = "Sort Alphabetically")
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = if (uiState.value.workQuery.sortDirection == Order.DIRECTION_DESC) "Desc" else "Asc")
+                    Text(text = if (uiState.value.workQuery.orderDirection == Filter.DIRECTION_DESC) "Desc" else "Asc")
                 }
             }
         }

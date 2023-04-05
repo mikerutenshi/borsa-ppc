@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class ResponseBody<T>(
     @SerializedName("status")
-    val status: String?,
+    val status: String,
     @SerializedName("message")
-    val message: String?,
+    val message: String,
     @SerializedName("data")
     val data: T,
     @SerializedName("meta")

@@ -2,8 +2,8 @@ package com.android.borsappc.data.net
 
 import androidx.datastore.core.DataStore
 import com.android.borsappc.UserPreferences
-import com.android.borsappc.data.repository.datasource.AuthRemoteDataSource
 import com.android.borsappc.data.model.ResponseBody
+import com.android.borsappc.data.repository.datasource.AuthRemoteDataSource
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -47,7 +47,7 @@ class ErrorInterceptor(
                                 ) {
                                     signOut()
                                 }
-                                throw IOException(jsonObject.get("message").getAsString())
+                                throw IOException(jsonObject.get("message").asString)
                             }
                         } catch (ex: JsonSyntaxException) {
                             Timber.d("Json syntax exception when getting object")

@@ -22,8 +22,8 @@ abstract class WorkDao {
     }
 
     private fun buildQuery(query: WorkQuery): SimpleSQLiteQuery {
-        val sortKey = query.sortBy.second
-        val sortDirection = if (query.sortDirection == "asc") {
+        val sortKey = query.orderBy
+        val sortDirection = if (query.orderDirection == "asc") {
             "ASC"
         } else {
             "DESC"

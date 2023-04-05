@@ -1,5 +1,6 @@
 package com.android.borsappc.data.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -15,7 +16,9 @@ data class ProductListItem(
     @SerializedName("name")
     var name: String = "Tazia",
     @SerializedName("sub_category")
+    @ColumnInfo("sub_category")
     var subCategory: String = "Mid-cut Boot",
     @SerializedName("created_at")
+    @ColumnInfo("created_at")
     var createdAt: String = LocalDateTime.now().toString()
 )

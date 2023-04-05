@@ -3,7 +3,7 @@ package com.android.borsappc.ui.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.borsappc.data.model.API_DATE_FORMAT
-import com.android.borsappc.data.model.Order
+import com.android.borsappc.data.model.Filter
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.data.repository.WorkRepository
@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(
         initUIState()
     }
 
-    fun initUIState() {
+    private fun initUIState() {
         viewModelScope.launch {
             workRepository.getWorkFilterData().collectLatest {
                 val initialState = MainUiState(workQuery = WorkQuery(
@@ -45,8 +45,8 @@ class MainViewModel @Inject constructor(
                             ofPattern(API_DATE_FORMAT)
                         )
                     },
-                    sortBy = it.sort.sortBy.ifEmpty { Order.BY_SPK_NO },
-                    sortDirection = it.sort.sortDirection.ifEmpty { Order.DIRECTION_ASC }
+                    orderBy = it.order.orderByRemote,
+                    orderDirection = it.order.orderDirection.ifEmpty { Filter.DIRECTION_ASC }
                 ))
                 _uiState.update { initialState }
                 workRepository.storeWorkFilterData(initialState.workQuery)
@@ -78,7 +78,7 @@ class MainViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         workQuery =
-                        it.workQuery.copy(sortBy = event.key)
+                        it.workQuery.copy(orderBy = event.key)
                     )
                 }
             }
@@ -86,7 +86,7 @@ class MainViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         workQuery =
-                        it.workQuery.copy(sortDirection = event.direction)
+                        it.workQuery.copy(orderDirection = event.direction)
                     )
                 }
             }

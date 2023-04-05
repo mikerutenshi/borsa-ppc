@@ -20,8 +20,8 @@ class WorkViewModel @Inject constructor(
         val workQuery = WorkQuery(
             startDate = it.date.startDate,
             endDate = it.date.endDate,
-            sortBy = it.sort.sortBy,
-            sortDirection = it.sort.sortDirection
+            orderBy = it.order.orderByRemote,
+            orderDirection = it.order.orderDirection
         )
         workRepository.getWorks(workQuery).cachedIn(viewModelScope)
     }

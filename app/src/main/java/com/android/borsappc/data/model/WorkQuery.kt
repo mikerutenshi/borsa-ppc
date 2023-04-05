@@ -9,8 +9,8 @@ data class WorkQuery (
         DateTimeFormatter.ofPattern(API_DATE_FORMAT)),
     val endDate: String = LocalDate.now().format(
         DateTimeFormatter.ofPattern(API_DATE_FORMAT)),
-    val sortDirection: String = "asc",
-    val sortBy: Pair<String, String> = Pair("spk_no", "spkNo"),
+    val orderDirection: String = Filter.DIRECTION_DESC,
+    val orderBy: String = Filter.BY_CREATED_AT,
     val limit: Int = 10,
     val page: Int = 1,
 )
