@@ -2,9 +2,9 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-parcelize'
     id "com.google.protobuf" version "0.8.17"
-    id "kotlin-parcelize"
 }
 
 
@@ -76,6 +76,7 @@ android {
     buildFeatures {
         // Enables Jetpack Compose for this module
         compose true
+        buildConfig true
     }
 
     compileOptions {
@@ -110,27 +111,6 @@ private String generateVersionName() {
 	}
 	return versionName
 }
-
-protobuf {
-    // Configures the Protobuf compilation and the protoc executable
-    protoc {
-        // Downloads from the repositories
-        artifact = "com.google.protobuf:protoc:3.14.0"
-    }
-
-    // Generates the java Protobuf-lite code for the Protobufs in this project
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-            // Configures the task output type
-                java {
-            // Java Lite has smaller code size and is recommended for Android
-                    option 'lite'
-                }
-            }
-        }
-    }
- }
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
@@ -182,8 +162,7 @@ dependencies {
 
     //==================== Data Store ====================
     implementation  "androidx.datastore:datastore:1.0.0"
-    // Starting from Protobuf 3.8.0, use the lite runtime library
-    implementation  "com.google.protobuf:protobuf-javalite:3.18.0"
+    implementation 'com.google.protobuf:protobuf-javalite:3.18.0'
 
     //==================== Logging ====================
     implementation 'com.jakewharton.timber:timber:5.0.1'
@@ -216,8 +195,27 @@ dependencies {
 
     //==================== Paging ====================
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha16"
 
     //==================== Memory Leak Detection ====================
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.18.0'
+    }
+    generateProtoTasks {
+        all().configureEach { task ->
+            task.builtins {
+                java {
+                    option "lite"
+                }
+            }
+        }
+    }
 }
