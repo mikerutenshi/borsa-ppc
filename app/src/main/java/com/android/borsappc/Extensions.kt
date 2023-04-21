@@ -1,9 +1,7 @@
 package com.android.borsappc
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CancellationException
 
 fun Context.toast(messageId: Int, param: String?) {
@@ -51,13 +49,13 @@ inline fun <R, T> Result<T>.mapResult(transform: (value: T) -> R): Result<R> {
     }
 }
 
-fun Context.getActivity(): AppCompatActivity? {
-  var currentContext = this
-  while (currentContext is ContextWrapper) {
-       if (currentContext is AppCompatActivity) {
-            return currentContext
-       }
-       currentContext = currentContext.baseContext
-  }
-  return null
-}
+//fun Context.getActivity(): AppCompatActivity? {
+//  var currentContext = this
+//  while (currentContext is ContextWrapper) {
+//       if (currentContext is AppCompatActivity) {
+//            return currentContext
+//       }
+//       currentContext = currentContext.baseContext
+//  }
+//  return null
+//}

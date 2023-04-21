@@ -16,7 +16,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:theme="@style/Theme.BorsaPPC"
             android:label="${appName}"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"
