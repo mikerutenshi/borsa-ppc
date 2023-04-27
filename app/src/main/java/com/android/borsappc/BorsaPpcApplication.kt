@@ -2,7 +2,6 @@ package com.android.borsappc
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import leakcanary.LeakCanary
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 

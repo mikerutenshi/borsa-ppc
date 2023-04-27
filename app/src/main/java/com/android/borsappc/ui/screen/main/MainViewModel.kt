@@ -1,23 +1,30 @@
 package com.android.borsappc.ui.screen.main
 
+import API_DATE_FORMAT
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.borsappc.data.model.API_DATE_FORMAT
-import com.android.borsappc.data.model.Filter
+import com.android.borsappc.data.model.QueryProductList
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.AuthRepository
+import com.android.borsappc.data.repository.ProductRepository
 import com.android.borsappc.data.repository.WorkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val workRepository: WorkRepository
+    private val workRepository: WorkRepository,
+    private val productRepository: ProductRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MainUiState> = MutableStateFlow(MainUiState())
@@ -28,29 +35,47 @@ class MainViewModel @Inject constructor(
         viewModelScope, SharingStarted.WhileSubscribed(5000L))
 
     init {
-        initUIState()
+        initQueriesFromDataStore()
     }
 
-    private fun initUIState() {
+    private fun initQueriesFromDataStore() {
         viewModelScope.launch {
-            workRepository.getWorkFilterData().collectLatest {
-                val initialState = MainUiState(workQuery = WorkQuery(
-                    startDate = it.date.startDate.ifEmpty {
-                        LocalDate.now().minusWeeks(1L).format(
-                            ofPattern(API_DATE_FORMAT)
-                        )
-                    },
-                    endDate = it.date.endDate.ifEmpty {
-                        LocalDate.now().format(
-                            ofPattern(API_DATE_FORMAT)
-                        )
-                    },
-                    orderBy = it.order.orderByRemote,
-                    orderDirection = it.order.orderDirection.ifEmpty { Filter.DIRECTION_ASC }
-                ))
-                _uiState.update { initialState }
-                workRepository.storeWorkFilterData(initialState.workQuery)
+            workRepository.getWorkFilterData().collectLatest { workFilterPrefs ->
+                val workQueryState = WorkQuery()
+                val startDate = workFilterPrefs.date.startDate.ifEmpty { null }
+                val endDate = workFilterPrefs.date.endDate.ifEmpty { null }
+                val orderBy = workFilterPrefs.order.orderByRemote.ifEmpty { null }
+                val orderDirection = workFilterPrefs.order.orderDirection.ifEmpty { null }
+                startDate?.let { workQueryState.startDate = it }
+                endDate?.let { workQueryState.endDate = it }
+                orderBy?.let { workQueryState.orderBy = it }
+                orderDirection?.let { workQueryState.orderDirection = it }
+
+                _uiState.update {
+                    it.copy(
+                        workQuery = workQueryState
+                    )
+                }
+                workRepository.storeWorkFilterData(workQueryState)
             }
+
+            productRepository.getProductListPrefs().collectLatest { productListPrefs ->
+                val productQueryState = QueryProductList()
+                val gender = productListPrefs.gender.ifEmpty { null }
+                val subCategory = productListPrefs.subcategory.ifEmpty { null }
+                val orderBy = productListPrefs.order.orderByRemote.ifEmpty { null }
+                val orderDirection = productListPrefs.order.orderDirection.ifEmpty { null }
+                gender?.let { productQueryState.gender = it }
+                subCategory?.let { productQueryState.subCategory = it }
+                orderBy?.let { productQueryState.orderBy = it }
+                orderDirection?.let { productQueryState.orderDirection = it }
+
+                _uiState.update {
+                    it.copy(queryProductList = productQueryState)
+                }
+                productRepository.putProductListPrefs(productQueryState)
+            }
+
         }
     }
 
@@ -90,7 +115,7 @@ class MainViewModel @Inject constructor(
                     )
                 }
             }
-            MainUIEvent.FilterScreenClosed -> {
+            is MainUIEvent.FilterScreenClosed -> {
                 viewModelScope.launch {
                     workRepository.storeWorkFilterData(_uiState.value.workQuery)
                 }

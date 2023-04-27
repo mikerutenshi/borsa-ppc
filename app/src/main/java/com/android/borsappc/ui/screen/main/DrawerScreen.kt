@@ -14,7 +14,6 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.borsappc.R
-import com.android.borsappc.data.model.Role
 import com.android.borsappc.data.model.User
 import java.time.LocalTime
 

@@ -1,4 +1,4 @@
-package com.android.borsappc.data.model
+
 
 object Position {
     const val DRAWER = "drawer"
@@ -20,15 +20,15 @@ object Role {
 object Filter {
     const val DIRECTION_ASC = "asc";
     const val DIRECTION_DESC = "desc";
-    val BY_WORKER_NAME = "name"
-    val BY_WORKER_POSITION = "position"
-    val BY_SPK_NO = "spk_no"
-    val BY_ARTICLE_NO = "article_no"
-    val BY_CREATED_AT = "created_at"
-    val BY_CODE = "code"
-    val BY_NAME = "name"
-    val BY_DONE_AT = "done_at"
-    val BY_ASSIGNED_AT = "assigned_at"
+    const val BY_WORKER_NAME = "name"
+    const val BY_WORKER_POSITION = "position"
+    const val BY_SPK_NO = "spk_no"
+    const val BY_ARTICLE_NO = "article_no"
+    const val BY_CREATED_AT = "created_at"
+    const val BY_CODE = "code"
+    const val BY_NAME = "name"
+    const val BY_DONE_AT = "done_at"
+    const val BY_ASSIGNED_AT = "assigned_at"
 }
 
 const val API_DATE_FORMAT = "yyyy-MM-dd"

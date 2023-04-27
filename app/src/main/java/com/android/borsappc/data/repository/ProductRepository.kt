@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 class ProductRepository @Inject constructor (
     private val productLocalDataSource: ProductLocalDataSource,
-    private val productRemoteDataSource: ProductRemoteDataSource,
-    private val productPagingSource: ProductPagingSource
+    private val productRemoteDataSource: ProductRemoteDataSource
     ) {
     @OptIn(ExperimentalPagingApi::class)
     fun getProducts(queries: QueryProductList): Flow<PagingData<ProductListItem>> {
@@ -29,7 +28,7 @@ class ProductRepository @Inject constructor (
             productLocalDataSource,
             productRemoteDataSource)
         ) {
-            productPagingSource
+            ProductPagingSource(queries, productLocalDataSource)
         }.flow
     }
 

@@ -1,11 +1,11 @@
 package com.android.borsappc.data.repository.datasource
 
+import Filter
 import androidx.datastore.core.DataStore
 import com.android.borsappc.Order
 import com.android.borsappc.ProductListPrefs
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.data.db.AppDatabase
-import com.android.borsappc.data.model.Filter
 import com.android.borsappc.data.model.PagedList
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList

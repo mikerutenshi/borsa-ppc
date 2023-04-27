@@ -1,8 +1,8 @@
 package com.android.borsappc.data.repository.datasource
 
+import Filter
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.android.borsappc.data.model.Filter
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList
 import retrofit2.HttpException
@@ -10,21 +10,21 @@ import java.io.IOException
 
 class ProductPagingSource  (private val queries: QueryProductList, private val localDataSource: ProductLocalDataSource) : PagingSource<String, ProductListItem>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, ProductListItem> {
+    override suspend fun load(params: LoadParams<String>): PagingSource.LoadResult<String, ProductListItem> {
         val index = params.key
         queries.index = index
 
         return try {
             val pagedList = localDataSource.getProducts(queries)
 
-            LoadResult.Page(pagedList.data, null, pagedList.nextKey)
+            PagingSource.LoadResult.Page(pagedList.data, null, pagedList.nextKey)
         }
         catch (e: IOException) {
             // IOException for network failures.
-            return LoadResult.Error(e)
+            return PagingSource.LoadResult.Error(e)
         } catch (e: HttpException) {
             // HttpException for any non-2xx HTTP status codes.
-            return LoadResult.Error(e)
+            return PagingSource.LoadResult.Error(e)
         }
 
     }

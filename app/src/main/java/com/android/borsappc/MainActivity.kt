@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.Navigator
+import com.android.borsappc.data.model.User
 import com.android.borsappc.data.repository.AuthRepository
 import com.android.borsappc.data.repository.WorkRepository
 import com.android.borsappc.ui.BorsaPpcTheme
@@ -24,7 +25,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startScreen()
+        //startScreen()
+        byPassAuthScreen()
     }
 
     // "fix" android Q activity leak on back-pressed
@@ -50,6 +52,15 @@ class MainActivity : ComponentActivity() {
                 }
                 .onFailure { error ->
                     Timber.d("MainActivity - startScreen ${error.localizedMessage}") }
+        }
+    }
+
+    private fun byPassAuthScreen() {
+        val mockUser = User(0, "mockUsername", "mockName", "mockSurname", "admin_price", "mockAccessToken", "mockRefreshToken")
+        setContent {
+            BorsaPpcTheme() {
+                Navigator(MainScreen(mockUser))
+            }
         }
     }
 }

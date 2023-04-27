@@ -1,9 +1,9 @@
 package com.android.borsappc.ui.screen.product
 
+import PAGE_LIMIT
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.android.borsappc.data.model.PAGE_LIMIT
 import com.android.borsappc.data.model.QueryProductList
 import com.android.borsappc.data.repository.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi

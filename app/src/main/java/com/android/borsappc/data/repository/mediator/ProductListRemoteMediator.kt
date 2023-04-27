@@ -1,10 +1,10 @@
 package com.android.borsappc.data.repository.mediator
 
+import Filter
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.android.borsappc.data.model.Filter
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList
 import com.android.borsappc.data.repository.datasource.ProductLocalDataSource

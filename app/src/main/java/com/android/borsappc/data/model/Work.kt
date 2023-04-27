@@ -1,5 +1,7 @@
 package com.android.borsappc.data.model
 
+import Position
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -10,10 +12,12 @@ data class Work(
     @PrimaryKey
     @SerializedName("work_id")
     var id: Int = 123,
+    @ColumnInfo(name = "spk_no")
     @SerializedName("spk_no")
     var spkNo: Int = 1234,
     @SerializedName("product_id")
     var productId: Int = 123,
+    @ColumnInfo(name = "article_no")
     @SerializedName("article_no")
     var articleNo: String = "A12345",
     @SerializedName("product_category_name")
@@ -44,6 +48,7 @@ data class Work(
     var liningDrawingCost: Int = 1234,
     @SerializedName("insole_stitching_cost")
     var insoleStitchingCost: Int = 0,
+    @ColumnInfo(name = "created_at")
     @SerializedName("created_at")
     var createdAt: String = LocalDateTime.now().toString(),
     @SerializedName("updated_at")

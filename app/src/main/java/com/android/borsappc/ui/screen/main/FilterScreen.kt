@@ -1,5 +1,7 @@
 package com.android.borsappc.ui.screen.main
 
+import API_DATE_FORMAT
+import Filter
 import android.app.DatePickerDialog
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
@@ -38,8 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.borsappc.R
-import com.android.borsappc.data.model.API_DATE_FORMAT
-import com.android.borsappc.data.model.Filter
 import com.android.borsappc.ui.BorsaPpcTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -133,6 +133,7 @@ fun FilterBottomSheet(viewModel: MainViewModel) {
                 Box {
                     OutlinedTextField(
                         value = sortOptions.getValue(uiState.value.workQuery.orderBy),
+//                        value = sortOptions.getValue(Filter.BY_CREATED_AT),
                         label = { Text(text = "Sort by") },
                         onValueChange = {},
                         modifier = Modifier

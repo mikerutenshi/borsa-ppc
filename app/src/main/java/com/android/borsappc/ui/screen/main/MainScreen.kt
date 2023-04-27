@@ -40,7 +40,7 @@ data class MainScreen(val user: User) : AndroidScreen() {
     @Composable
     override fun Content() {
         val viewModel = getViewModel<MainViewModel>()
-        Navigator(WorkScreen()) {
+        Navigator(ProductScreen()) {
             MainScreenContent(viewModel = viewModel, user = user)
         }
     }

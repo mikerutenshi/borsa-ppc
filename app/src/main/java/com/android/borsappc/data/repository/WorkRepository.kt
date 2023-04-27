@@ -1,5 +1,6 @@
 package com.android.borsappc.data.repository
 
+import Position
 import androidx.datastore.core.DataStore
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -10,7 +11,6 @@ import com.android.borsappc.Order
 import com.android.borsappc.UserPreferences
 import com.android.borsappc.WorkFilterPrefs
 import com.android.borsappc.data.db.AppDatabase
-import com.android.borsappc.data.model.Position
 import com.android.borsappc.data.model.WorkQuery
 import com.android.borsappc.data.repository.mediator.WorkRemoteMediator
 import com.android.borsappc.di.RetrofitWithAuth
