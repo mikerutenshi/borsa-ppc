@@ -63,8 +63,7 @@ fun WorkScreenContent(viewModel: WorkViewModel) {
 fun WorkList(works: Flow<PagingData<WorkUiModel>>) {
     val lazyWorkItems: LazyPagingItems<WorkUiModel> = works.collectAsLazyPagingItems()
 
-    LazyColumn(contentPadding = PaddingValues(16.dp),
-    ) {
+    LazyColumn(contentPadding = PaddingValues(16.dp), modifier = Modifier.fillMaxSize()) {
         items(lazyWorkItems) { work ->
             work?.let {
                 WorkItem(work = work)

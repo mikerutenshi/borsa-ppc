@@ -10,7 +10,7 @@ interface ProductDao {
      suspend fun insertAll(items: List<ProductListItem>)
 
     @RawQuery(observedEntities = [ProductListItem::class])
-     fun getProducts(querySql: SimpleSQLiteQuery): List< ProductListItem>
+     suspend fun getProducts(querySql: SimpleSQLiteQuery): List< ProductListItem>
 
     @Query("DELETE FROM products")
      suspend fun clearAll()

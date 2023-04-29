@@ -27,7 +27,7 @@ class ProductLocalDataSource @Inject constructor(
         val orderBy = queries.orderBy
         val direction = queries.orderDirection
         val limit = queries.limit + 1
-        val sqlBuilder = QueryBuilder()
+        val sqlBuilder = QueryBuilder("products")
 
         index?.let { sqlBuilder.filterProp(orderBy, it)}
         gender?.let { sqlBuilder.filterProp("gender", it) }
@@ -40,8 +40,8 @@ class ProductLocalDataSource @Inject constructor(
 
         val querySql = sqlBuilder.build()
         val products = productDao.getProducts(querySql)
-        val nextItem = products.lastOrNull()
-        var nextKey: String? = null
+        val nextItem = products.getOrNull(queries.limit)
+        var /**/nextKey: String? = null
         nextItem?.let {
             nextKey = when (queries.orderBy) {
                 Filter.BY_CREATED_AT -> it.createdAt
@@ -51,8 +51,8 @@ class ProductLocalDataSource @Inject constructor(
                     it.createdAt
                 }
             }
+            products.dropLast(1)
         }
-        products.dropLast(1)
 
         return PagedList(ArrayList(products), nextKey)
     }

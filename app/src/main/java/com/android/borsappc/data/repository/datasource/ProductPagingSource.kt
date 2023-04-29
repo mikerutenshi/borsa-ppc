@@ -5,7 +5,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.data.model.QueryProductList
-import retrofit2.HttpException
 import java.io.IOException
 
 class ProductPagingSource  (private val queries: QueryProductList, private val localDataSource: ProductLocalDataSource) : PagingSource<String, ProductListItem>() {
@@ -21,9 +20,6 @@ class ProductPagingSource  (private val queries: QueryProductList, private val l
         }
         catch (e: IOException) {
             // IOException for network failures.
-            return PagingSource.LoadResult.Error(e)
-        } catch (e: HttpException) {
-            // HttpException for any non-2xx HTTP status codes.
             return PagingSource.LoadResult.Error(e)
         }
 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.hilt.getViewModel
 import com.android.borsappc.R
 import com.android.borsappc.data.model.ProductListItem
 import com.android.borsappc.ui.screen.ErrorItem
@@ -31,25 +31,25 @@ class ProductScreen : AndroidScreen() {
 
     @Composable
     override fun Content() {
-        //val viewModel = getViewModel<ProductListViewModel>()
-        ProductScreenContent()
+        val viewModel = getViewModel<ProductListViewModel>()
+        ProductScreenContent(viewModel)
     }
 
 }
 
 @Composable
-fun ProductScreenContent() {
+fun ProductScreenContent(productListViewModel: ProductListViewModel) {
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Product Screen", style = MaterialTheme.typography.h1)
-        //ProductList(products = viewModel.products)
+//        Text("Product Screen", style = MaterialTheme.typography.h1)
+        ProductList(products = productListViewModel.products)
     }
 }
 
 @Composable
 fun ProductList(products: Flow<PagingData<ProductListItem>>) {
     val lazyProductItems: LazyPagingItems<ProductListItem> = products.collectAsLazyPagingItems()
-    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+    LazyColumn(contentPadding = PaddingValues(16.dp), modifier = Modifier.fillMaxSize()) {
         items(lazyProductItems) { productItem ->
             productItem?.let {
                 ProductItem(product = productItem)
